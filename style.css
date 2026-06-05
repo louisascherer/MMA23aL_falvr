@@ -617,6 +617,135 @@ select:focus {
   border-color: #c17b4c;
 }
 
+/* ===== WARENKORB BUTTON & MODAL ===== */
+.cart-button {
+  background: #c17b4c;
+  color: white;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 40px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.cart-button:hover {
+  background: #a55d32;
+  transform: scale(1.02);
+}
+
+.cart-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+}
+
+.cart-modal-content {
+  background: white;
+  max-width: 600px;
+  width: 90%;
+  border-radius: 2rem;
+  padding: 2rem;
+  position: relative;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.close-modal {
+  position: absolute;
+  top: 1rem;
+  right: 1.5rem;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #999;
+}
+
+.close-modal:hover {
+  color: #c17b4c;
+}
+
+.cart-items-list {
+  margin: 1rem 0;
+}
+
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.8rem 0;
+  border-bottom: 1px solid #f0e4d4;
+}
+
+.cart-item img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 0.8rem;
+}
+
+.cart-item-details {
+  flex: 2;
+}
+
+.cart-item-quantity {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.cart-item-quantity button {
+  background: #f0e4d4;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s;
+}
+
+.cart-item-quantity button:hover {
+  background: #c17b4c;
+  color: white;
+}
+
+.cart-item-subtotal {
+  min-width: 80px;
+  text-align: right;
+  font-weight: 600;
+}
+
+.cart-item-remove {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+}
+
+.cart-item-remove:hover {
+  opacity: 1;
+}
+
+.cart-total {
+  text-align: right;
+  font-size: 1.3rem;
+  font-weight: bold;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 2px solid #c17b4c;
+}
+
 /* ===== RESPONSIVE ===== */
 @media (max-width: 700px) {
   .container {
