@@ -1,8 +1,8 @@
 <?php
 // db_connect.php – Zentrale Datenbankverbindung
-$host = 'Smma23aL.bbzwinf.ch';
+$host = 'localhost:3306';
 $port = 3306;
-$db   = 'louisa-scherer_plesk';
+$db   = 'louisa-scherer_';
 $user = 'louisa';
 $pass = '!Q*L7n5haDfggl4q';
 
