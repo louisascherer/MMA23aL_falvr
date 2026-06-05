@@ -1,6 +1,9 @@
 <?php
 require_once 'db_connect.php';
 
+if (!$pdo) {
+    die("Keine Datenbankverbindung");
+}
 // Aktive Produkte aus der Datenbank laden
 $stmt = $pdo->query("SELECT produkt_id, name, beschreibung, preis_chf, herkunft, menge, lagerbestand FROM produkte WHERE aktiv = 1 ORDER BY name");
 $produkte = $stmt->fetchAll(PDO::FETCH_ASSOC);
