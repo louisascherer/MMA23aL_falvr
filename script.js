@@ -181,23 +181,42 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const response = await fetch("submit_gewinnspiel.php", {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: formData,
       });
-      const result = await response.json();
       const feedback = document.getElementById("formFeedback");
-      if (result.success) {
+
+      const text = await response.text();
+      let result = {};
+      try {
+        result = text ? JSON.parse(text) : {};
+      } catch (parseErr) {
+        feedback.innerHTML = `<div style="color:#b33;">⚠️ Serverfehler. Ungültige Server-Antwort: ${text}</div>`;
+        setTimeout(() => (feedback.innerHTML = ""), 5000);
+        return;
+      }
+
+      if (!response.ok) {
+        const errMsg =
+          result && (result.error || result.message)
+            ? Array.isArray(result.error)
+              ? result.error.join(", ")
+              : result.error || result.message
+            : response.statusText || "Fehler";
+        feedback.innerHTML = `<div style="color:#b33;">⚠️ ${errMsg}</div>`;
+      } else if (result.success) {
         feedback.innerHTML = `<div class="success-msg">✅ ${result.message}</div>`;
         form.reset();
       } else {
         let errMsg = Array.isArray(result.error)
           ? result.error.join(", ")
-          : result.error;
+          : result.error || "Fehler";
         feedback.innerHTML = `<div style="color:#b33;">⚠️ ${errMsg}</div>`;
       }
       setTimeout(() => (feedback.innerHTML = ""), 5000);
     } catch (err) {
       document.getElementById("formFeedback").innerHTML =
-        '<div style="color:#b33;">⚠️ Serverfehler. Bitte später erneut versuchen.</div>';
+        `<div style="color:#b33;">⚠️ Serverfehler. ${err.message || err}.</div>`;
     }
   });
 });
