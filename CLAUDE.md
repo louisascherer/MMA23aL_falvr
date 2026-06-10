@@ -27,12 +27,41 @@ Diese Regeln gelten für allen PHP- und JavaScript-Code in diesem Projekt:
    (Schutz vor XSS).
 7. **Keine HTML5-`required`-Attribute und kein AJAX** – Formularprüfung im
    Browser geschieht mit einfachem JavaScript.
+8. **SQL-Views statt JOINs im PHP.** Müssen Daten aus mehreren Tabellen
+   kombiniert werden, eine **View in der Datenbank** anlegen und im PHP nur ein
+   einfaches `SELECT ... FROM <view>` schreiben. So steht im Seitencode kein
+   JOIN, den man in der Prüfung erklären müsste. View-Definitionen als `.sql`
+   in `Datenbank referenz/` ablegen (Beispiel: `produkt_details_view.sql`).
 
 ## Dateistruktur
 
 | Datei/Ordner | Aufgabe |
 |---|---|
 | `db_connect.php` | Baut die PDO-Verbindung zur Datenbank auf (`$pdo`). Wird per `require` in jede Seite eingebunden. |
+| `index.php` | Startseite: Bestseller-Slider (aus DB), Glücksrad, Gewinnspiel-Formular. |
+| `shop.php` | Produktübersicht: Kategorie-Filter, Gruppierung mit Überschriften, Vorschau (3/Kategorie) in der „Alle"-Ansicht, Paginierung (12/Seite) je Kategorie, Warenkorb-Modal. |
+| `produkt.php` | Produkt-Detailseite (`?id=`). Nutzt die View `produkt_details`. |
+| `erlebnisse.php` | Gewürzerlebnisse aus der DB. |
+| `ueber-uns.php` | Statische Info-Seite. |
+| `bild.php` | Gibt ein Produktbild (BLOB) aus `produktbilder` aus (`?id=`). |
+| `erlebnisbild.php` | Gibt ein Erlebnisbild (BLOB) aus `gewuerzerlebnisbilder` aus (`?id=`). |
+| `submit_gewinnspiel.php` | Verarbeitet das Gewinnspiel-Formular (POST), legt Kunde an, leitet zurück. |
+| `submit_bestellungen.php` | Verarbeitet die Bestellung (POST), legt Kunde/Bestellung/Positionen an. |
+| `script.js` | Warenkorb (localStorage), Slider, Glücksrad, Formular-Validierung im Browser. |
+| `style.css` | Alle Styles. |
+| `images/` | Statische Bilder (z.B. Logo) als WebP. |
+| `Datenbank referenz/` | SQL-Dump der DB und View-Definitionen (`.sql`). |
+
+## Bilder
+
+- **Statische Bilder** (Logo, Deko) liegen im `images/`-Ordner als **WebP**,
+  maximal **1920px** breit.
+- **Produkt- und Erlebnisbilder** liegen als `mediumblob` in der Datenbank und
+  werden über `bild.php?id=` bzw. `erlebnisbild.php?id=` ausgegeben (nicht als
+  Datei verlinkt).
+- **Neue Bilder** immer zu WebP (max. 1920px Breite, Höhe proportional)
+  konvertieren. ffmpeg hat in dieser Umgebung **keinen** WebP-Encoder – deshalb
+  mit `sips` skalieren und mit `cwebp` konvertieren.
 
 ## Lokale Entwicklung
 
