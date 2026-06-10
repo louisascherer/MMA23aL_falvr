@@ -266,6 +266,24 @@ footer {
   color: white;
 }
 
+/* ===== KATEGORIE-FILTER (Shop) ===== */
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0 2rem;
+}
+
+/* aktiver Filter-Knopf: gefüllt statt nur umrandet */
+.filter-bar a.active {
+  background: #c17b4c;
+  color: white;
+}
+
+.kategorie-titel {
+  margin: 2rem 0 1rem;
+}
+
 /* ===== SECTIONS ===== */
 section {
   padding: 4rem 0;
