@@ -137,9 +137,12 @@ if (isset($_GET['bestellung']) && $_GET['bestellung'] === 'fehler') {
                     data-name="<?php echo htmlspecialchars($produkt['name']); ?>"
                     data-price="<?php echo $produkt['preis_chf']; ?>"
                     data-image="<?php echo $bildPfad; ?>">
-                    <div class="product-image"><img src="<?php echo $bildPfad; ?>" alt="<?php echo htmlspecialchars($produkt['name']); ?>" loading="lazy"></div>
-                    <div class="product-title"><?php echo htmlspecialchars($produkt['name']); ?></div>
-                    <div class="product-price"><?php echo number_format($produkt['preis_chf'], 2); ?> CHF</div>
+                    <!-- Bild, Name und Preis führen zur Detailseite -->
+                    <a class="produkt-link" href="produkt.php?id=<?php echo $produkt['produkt_id']; ?>">
+                        <div class="product-image"><img src="<?php echo $bildPfad; ?>" alt="<?php echo htmlspecialchars($produkt['name']); ?>" loading="lazy"></div>
+                        <div class="product-title"><?php echo htmlspecialchars($produkt['name']); ?></div>
+                        <div class="product-price"><?php echo number_format($produkt['preis_chf'], 2); ?> CHF</div>
+                    </a>
                     <button class="btn btn-outline add-to-cart">In den Warenkorb</button>
                 </div>
             <?php endforeach; ?>

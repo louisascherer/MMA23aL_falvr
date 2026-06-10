@@ -300,6 +300,162 @@ footer {
   color: white;
 }
 
+/* Bild/Name/Preis einer Kachel als Link zur Detailseite */
+.produkt-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* ===== PRODUKT-DETAILSEITE ===== */
+
+/* Zurück-Link oberhalb der Detailkarte */
+.zurueck-link {
+  display: inline-block;
+  margin: 1.5rem 0 1rem;
+  color: #c17b4c;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.zurueck-link:hover {
+  text-decoration: underline;
+}
+
+/* Detailkarte: zwei Spalten (Bild links, Infos rechts), ruhig und ohne Hover */
+.product-detail {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: center;
+  max-width: 980px;
+  margin: 0 auto 2rem;
+  padding: 2rem;
+  text-align: left;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+}
+
+/* Hover-Effekt der normalen Kacheln hier ausschalten */
+.product-detail:hover {
+  transform: none;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  border-color: #f0e4d4;
+}
+
+/* Bildpanel: warmer Hintergrund, ganzes Bild sichtbar (nicht beschnitten) */
+.produkt-detail-bild {
+  background: linear-gradient(135deg, #fdf4e8 0%, #f0e4d4 100%);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.produkt-detail-bild img {
+  width: 100%;
+  max-height: 420px;
+  object-fit: contain;
+  border-radius: 0.5rem;
+}
+
+/* kleines Kategorie-Etikett über dem Namen */
+.produkt-eyebrow {
+  display: inline-block;
+  background: #f0e4d4;
+  color: #8a5a33;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.8rem;
+  border-radius: 40px;
+  margin-bottom: 0.8rem;
+}
+
+.produkt-detail-info h1 {
+  margin: 0 0 0.3rem;
+  font-size: 2.2rem;
+  line-height: 1.1;
+}
+
+.produkt-preis {
+  color: #c17b4c;
+  font-weight: 700;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.produkt-beschreibung {
+  color: #5a5048;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+/* Fakten als zweispaltiges Raster */
+.produkt-fakten {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8rem 1.5rem;
+  margin: 0 0 1.5rem;
+}
+
+.produkt-fakten > div {
+  border-top: 1px solid #f0e4d4;
+  padding-top: 0.5rem;
+}
+
+.produkt-fakten dt {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a08c79;
+}
+
+.produkt-fakten dd {
+  margin: 0.15rem 0 0;
+  font-weight: 600;
+}
+
+/* Zutaten als kleine Chips */
+.zutaten-titel {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #a08c79;
+  margin-bottom: 0.5rem;
+}
+
+.produkt-zutaten {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.zutat-chip {
+  background: #fdf4e8;
+  border: 1px solid #e2d3c4;
+  border-radius: 40px;
+  padding: 0.3rem 0.9rem;
+  font-size: 0.85rem;
+  color: #8a5a33;
+}
+
+.produkt-detail-info .btn {
+  width: 100%;
+}
+
+/* Mobil: Detailkarte einspaltig */
+@media (max-width: 700px) {
+  .product-detail {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
 /* Seiten-Navigation (Paginierung) */
 .pagination {
   display: flex;
