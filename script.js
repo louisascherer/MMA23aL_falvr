@@ -119,14 +119,15 @@ document.addEventListener("DOMContentLoaded", function () {
   canvas.width = size;
   canvas.height = size;
 
-  // Die sechs Felder des Rads (Beschriftung und Farbe)
+  // Die sechs Felder des Rads (Beschriftung, Hintergrund- und Textfarbe)
+  // Farben passend zum Design: Cayenne-Rot, Schwarz, Hellgrau im Wechsel
   var segments = [
-    { label: "Gratis Gewürz", color: "#f7c9a3" },
-    { label: "10% Rabatt", color: "#f0bb87" },
-    { label: "5% Rabatt", color: "#eaa96e" },
-    { label: "Gratis Versand", color: "#e29656" },
-    { label: "Nichts getroffen", color: "#d97f41" },
-    { label: "15% Rabatt", color: "#cf6d2b" },
+    { label: "Gratis Gewürz", color: "#d72638", text: "#ffffff" },
+    { label: "10% Rabatt", color: "#111111", text: "#ffffff" },
+    { label: "5% Rabatt", color: "#e8e8e8", text: "#111111" },
+    { label: "Gratis Versand", color: "#d72638", text: "#ffffff" },
+    { label: "Nichts getroffen", color: "#111111", text: "#ffffff" },
+    { label: "15% Rabatt", color: "#e8e8e8", text: "#111111" },
   ];
   var segCount = segments.length;
   // Wie viel Winkel ein Feld einnimmt (voller Kreis geteilt durch Anzahl Felder)
@@ -160,25 +161,25 @@ document.addEventListener("DOMContentLoaded", function () {
       ctx.save();
       ctx.translate(cx, cy);
       ctx.rotate(start + angleStep / 2);
-      ctx.font = "bold 13px 'Inter'";
-      ctx.fillStyle = "#2c2418";
+      ctx.font = "bold 13px 'Neue Montreal', sans-serif";
+      ctx.fillStyle = segments[i].text;
       ctx.textAlign = "right";
       ctx.textBaseline = "middle";
       ctx.fillText(segments[i].label, r * 0.9, 0);
       ctx.restore();
     }
 
-    // Pfeil oben am Rad
+    // Pfeil oben am Rad (schwarz)
     ctx.beginPath();
     ctx.moveTo(cx + 18, cy - r - 8);
     ctx.lineTo(cx - 18, cy - r - 8);
     ctx.lineTo(cx, cy - r + 12);
-    ctx.fillStyle = "#3e2c1c";
+    ctx.fillStyle = "#111111";
     ctx.fill();
-    // Kleiner Kreis in der Mitte
+    // Kleiner Kreis in der Mitte (rot)
     ctx.beginPath();
     ctx.arc(cx, cy, r * 0.08, 0, 2 * Math.PI);
-    ctx.fillStyle = "#d9b48b";
+    ctx.fillStyle = "#d72638";
     ctx.fill();
   }
 
@@ -247,7 +248,10 @@ document.addEventListener("DOMContentLoaded", function () {
   function zeigeGewinn(gewinn) {
     var hinweis = document.getElementById("gewinnHinweis");
     if (hinweis) {
-      hinweis.innerText = "🎉 Dein Gewinn: " + gewinn;
+      // Kleines Geschenk-Icon (SVG) statt Emoji vor den Text setzen
+      var geschenk =
+        '<svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13"/><path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"/><path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"/></svg>';
+      hinweis.innerHTML = geschenk + " Dein Gewinn: " + gewinn;
     }
     var formCard = document.getElementById("gewinnspielCard");
     if (formCard) {
@@ -351,10 +355,58 @@ document.addEventListener("DOMContentLoaded", function () {
     // Wenn die Eingaben nicht gültig sind: Formular NICHT abschicken
     if (!validateForm()) {
       e.preventDefault();
+      // Hinweis mit Warn-Icon (SVG) statt Emoji anzeigen
+      var warnung =
+        '<svg class="icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>';
       document.getElementById("formFeedback").innerHTML =
-        '<div style="color:#b33;">⚠️ Bitte korrigieren.</div>';
+        '<div class="error-msg">' + warnung + " Bitte korrigieren.</div>";
       return;
     }
     // Alles gültig: das Formular wird normal an submit_gewinnspiel.php geschickt
   });
+});
+
+// ===== NEWSLETTER (Footer) =====
+document.addEventListener("DOMContentLoaded", function () {
+  var form = document.getElementById("newsletterForm");
+  if (!form) {
+    return;
+  }
+  form.addEventListener("submit", function (e) {
+    // Kein echter Versand: Seite nicht neu laden, nur Dankesmeldung zeigen
+    e.preventDefault();
+    var feld = document.getElementById("newsletterEmail");
+    var feedback = document.getElementById("newsletterFeedback");
+    var wert = "";
+    if (feld) {
+      wert = feld.value.trim();
+    }
+    // Einfache Prüfung: Eingabe vorhanden und sieht nach E-Mail aus
+    if (wert.length < 3 || wert.indexOf("@") === -1) {
+      feedback.innerText = "Bitte gib eine gültige E-Mail ein.";
+      return;
+    }
+    feedback.innerText = "Danke fürs Abonnieren!";
+    if (feld) {
+      feld.value = "";
+    }
+  });
+});
+
+// ===== KLEINE INFO-BUTTONS =====
+document.addEventListener("DOMContentLoaded", function () {
+  // "Mehr erfahren" auf der Startseite
+  var moreInfoBtn = document.getElementById("moreInfoBtn");
+  if (moreInfoBtn) {
+    moreInfoBtn.addEventListener("click", function () {
+      alert("Erfahre mehr über unsere Gewürze.");
+    });
+  }
+  // "Entdecken" auf der Über-uns-Seite
+  var entdeckenBtn = document.getElementById("entdeckenBtn");
+  if (entdeckenBtn) {
+    entdeckenBtn.addEventListener("click", function () {
+      alert("Besuche unseren Shop für die neuesten Kreationen.");
+    });
+  }
 });

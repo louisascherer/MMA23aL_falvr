@@ -23,266 +23,276 @@ $formVerstecken = true;
 if ($gewinnspielOk || $gewinnspielFehler) {
     $formVerstecken = false;
 }
+
+// Titel setzen und den gemeinsamen Kopf laden
+$seitentitel = 'flavr. Gewürze mit Charakter';
+require 'header.php';
 ?>
-<!doctype html>
-<html lang="de">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>flavr. – Gewürze mit Charakter</title>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <header>
-      <div class="top-bar">
-        <div class="logo">
-          <a href="index.php"
-            ><img src="images/flavr-logo.webp" alt="flavr." class="logo-img"
-          /></a>
-        </div>
-        <a href="shop.php" class="bestellen-link">Bestellen</a>
-        <div class="hamburger"><span></span><span></span><span></span></div>
+
+<!-- Hero-Bereich (vollflächig schwarz) -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <span class="hero-eyebrow">Gewürze mit Charakter</span>
+      <h1>Spice up<br />everything<span class="hero-akzent">.</span></h1>
+      <p class="hero-sub">
+        Hochwertige Einzelgewürze und kreative Blends, die deinen Gerichten
+        Tiefe und Charakter geben. Minimalistisch im Design, pur im Geschmack.
+      </p>
+      <div class="hero-buttons">
+        <a href="shop.php" class="btn">Shop entdecken
+          <!-- Icon: arrow-right (lucide.dev) -->
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+        <button class="btn-outline" id="moreInfoBtn">Mehr erfahren</button>
       </div>
-      <div class="nav-links">
-        <a href="index.php">Home</a>
-        <a href="shop.php">Shop</a>
-        <a href="erlebnisse.php">Erlebnisse</a>
-        <a href="ueber-uns.php">Über uns</a>
+    </div>
+    <div class="hero-media">
+      <img src="images/produktbilder/rote_chiliflocken.webp" alt="Rote Chiliflocken" />
+    </div>
+  </div>
+</section>
+
+<!-- Feature-Streifen mit vier Vorteilen -->
+<div class="feature-strip">
+  <div class="feature-strip-inner">
+    <div class="feature-item">
+      <!-- Icon: leaf (lucide.dev) -->
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>
+      <div>
+        <h3>Natürlich &amp; rein</h3>
+        <p>Ohne Zusätze.</p>
       </div>
-    </header>
-
-    <main>
-      <div class="container">
-        <!-- Hero-Bereich -->
-        <section>
-          <div class="hero">
-            <div class="hero-content">
-              <h1>Gewürze, die den Unterschied machen</h1>
-              <p>
-                Entdecken Sie unsere sorgfältig ausgewählten Gewürze und
-                kreativen Blends. Pur im Geschmack, minimalistisch im Design.
-              </p>
-              <div class="hero-buttons">
-                <a href="shop.php" class="btn">Einkaufen</a>
-                <button class="btn btn-outline" id="moreInfoBtn">
-                  Mehr erfahren
-                </button>
-              </div>
-            </div>
-            <div class="hero-image">Gewürzvielfalt</div>
-          </div>
-        </section>
-
-        <!-- Image Slider (Sortiment) – Bilder kommen aus der Datenbank -->
-        <section>
-          <h2 style="text-align: center">Entdecke unsere Bestseller</h2>
-          <div class="slider-container">
-            <button class="slider-btn prev" id="prevBtn">❮</button>
-            <div class="slider-track" id="sliderTrack">
-              <?php foreach ($bestseller as $produkt): ?>
-              <div class="slider-slide">
-                <img src="bild.php?id=<?php echo $produkt['produkt_id']; ?>" alt="<?php echo htmlspecialchars($produkt['name']); ?>" />
-                <div class="slide-caption"><?php echo htmlspecialchars($produkt['name']); ?></div>
-              </div>
-              <?php endforeach; ?>
-            </div>
-            <button class="slider-btn next" id="nextBtn">❯</button>
-          </div>
-          <div class="slider-dots" id="sliderDots"></div>
-        </section>
-
-        <!-- Promo-Teaser -->
-        <section>
-          <div class="promo-teaser">
-            <h3>✨ NEU: Gewürz-Abo</h3>
-            <p>
-              Jeden Monat eine neue Überraschungsmischung –
-              <strong>10% Rabatt</strong> für Neukunden!
-            </p>
-            <a href="shop.php" class="btn" style="margin-top: 0.5rem"
-              >Zum Abo</a
-            >
-          </div>
-        </section>
-
-        <section>
-          <div class="flavor-section">
-            <h2>Dein Geschmack verdient mehr</h2>
-            <p>
-              Starte jetzt dein kulinarisches Abenteuer mit reinen & ehrlichen
-              Gewürzen.
-            </p>
-            <div>
-              <button class="btn" id="interessantBtn">Sehr interessant</button>
-              <button class="btn btn-outline" id="effizientBtn">
-                Sehr effizient
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <!-- Glücksrad + Formular -->
-        <section>
-          <h2 style="text-align: center">Gewürz-Glücksrad</h2>
-          <p style="text-align: center">
-            Drehe am Rad und gewinne tolle Preise!
-          </p>
-          <div class="wheel-form-grid">
-            <div class="wheel-card">
-              <canvas id="wheelCanvas" width="400" height="400"></canvas>
-              <button id="spinWheelBtn" class="btn spin-btn">Drehen</button>
-              <div class="prize-meta">
-                Jeden Monat neue Preise<br />Viel Glück!
-              </div>
-            </div>
-            <div class="form-card<?php if ($formVerstecken) { echo ' is-hidden'; } ?>" id="gewinnspielCard">
-              <h3>Gewinnspiel teilnehmen</h3>
-              <!-- Hier zeigt JavaScript nach dem Drehen den Gewinn an -->
-              <div class="gewinn-hinweis" id="gewinnHinweis"></div>
-              <p>Melde dich bei unserem Newsletter an und erhalte deinen Code per E-Mail.</p>
-              <?php if ($gewinnspielOk): ?>
-              <!-- Bestätigung nach erfolgreicher Teilnahme -->
-              <div class="success-msg">✅ Vielen Dank für deine Teilnahme!</div>
-              <?php endif; ?>
-              <?php if ($gewinnspielFehler): ?>
-              <!-- Hinweis, wenn die Eingaben nicht gültig waren -->
-              <div class="error-msg">⚠️ Bitte fülle das Formular vollständig aus.</div>
-              <?php endif; ?>
-              <form id="contestForm" action="submit_gewinnspiel.php" method="post" novalidate>
-                <div class="form-group">
-                  <label>Vorname *</label
-                  ><input type="text" id="vorname" name="vorname" placeholder="Max" />
-                  <div class="error-msg" id="errorVorname"></div>
-                </div>
-                <div class="form-group">
-                  <label>Nachname *</label
-                  ><input type="text" id="nachname" name="nachname" placeholder="Mustermann" />
-                  <div class="error-msg" id="errorNachname"></div>
-                </div>
-                <div class="form-group">
-                  <label>E-Mail *</label
-                  ><input
-                    type="email"
-                    id="email"
-                    name="email"
-                    placeholder="max@example.com"
-                  />
-                  <div class="error-msg" id="errorEmail"></div>
-                </div>
-                <div class="form-group">
-                  <label>Woher kennen Sie flavr.? *</label
-                  ><select id="referrer" name="referrer">
-                    <option value="">-- Bitte wählen --</option>
-                    <option value="social">Social Media</option>
-                    <option value="freunde">Freunde & Familie</option>
-                    <option value="suche">Websuche</option>
-                  </select>
-                  <div class="error-msg" id="errorReferrer"></div>
-                </div>
-                <div class="form-group checkbox-group">
-                  <input type="checkbox" id="terms" name="terms" value="true" /><label
-                    >Ich akzeptiere die Teilnahmebedingungen.*</label
-                  >
-                </div>
-                <div class="error-msg" id="errorTerms"></div>
-                <button type="submit" class="btn" style="width: 100%">
-                  Teilnehmen
-                </button>
-                <div id="formFeedback"></div>
-              </form>
-            </div>
-          </div>
-        </section>
-
-        <section id="ueber-uns">
-          <div style="text-align: center">
-            <span
-              style="
-                background: #f0e4d4;
-                padding: 0.2rem 1rem;
-                border-radius: 40px;
-              "
-              >Qualität</span
-            >
-            <h2>Was flavr. besonders macht</h2>
-            <p>Jedes Gewürz wird sorgfältig ausgewählt und geprüft.</p>
-          </div>
-          <div class="features">
-            <div class="feature">
-              <h3>100% natürliche Gewürze</h3>
-              <p>Keine Zusatzstoffe.</p>
-            </div>
-            <div class="feature">
-              <h3>Schneller Versand</h3>
-              <p>Frisch und sicher.</p>
-            </div>
-            <div class="feature">
-              <h3>Kreative Blends</h3>
-              <p>Für neue Abenteuer.</p>
-            </div>
-          </div>
-        </section>
+    </div>
+    <div class="feature-item">
+      <!-- Icon: globe (lucide.dev) -->
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+      <div>
+        <h3>Aus aller Welt</h3>
+        <p>Sorgfältig ausgewählt.</p>
       </div>
-    </main>
+    </div>
+    <div class="feature-item">
+      <!-- Icon: flame (lucide.dev) -->
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/></svg>
+      <div>
+        <h3>Voller Geschmack</h3>
+        <p>Intensiv und echt.</p>
+      </div>
+    </div>
+    <div class="feature-item">
+      <!-- Icon: recycle (lucide.dev) -->
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 19H4.815a1.83 1.83 0 0 1-1.57-.881 1.785 1.785 0 0 1-.004-1.784L7.196 9.5"/><path d="M11 19h8.203a1.83 1.83 0 0 0 1.556-.89 1.784 1.784 0 0 0 0-1.775l-1.226-2.12"/><path d="m14 16-3 3 3 3"/><path d="M8.293 13.596 7.196 9.5 3.1 10.598"/><path d="m9.344 5.811 1.093-1.892A1.83 1.83 0 0 1 11.985 3a1.784 1.784 0 0 1 1.546.888l3.943 6.843"/><path d="m13.378 9.633 4.096 1.098 1.097-4.096"/></svg>
+      <div>
+        <h3>Nachhaltig verpackt</h3>
+        <p>Mehr Inhalt, weniger Müll.</p>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <footer>
-      <div class="footer-container">
-        <div class="footer-column">
-          <h4>flavr.</h4>
-          <p>Gewürze mit Charakter – handverlesen & fair.</p>
+<!-- Bestseller-Slider (Bilder kommen aus der Datenbank) -->
+<section class="section">
+  <div class="container">
+    <div class="section-kopf">
+      <span class="eyebrow">Unsere Favoriten</span>
+      <h2 class="section-titel">Kleine Zutaten.<br />Grosse Wirkung.</h2>
+      <p class="section-text">
+        Starte mit den Klassikern oder erkunde neue Kombinationen.
+      </p>
+    </div>
+
+    <div class="slider-container">
+      <button class="slider-btn prev" id="prevBtn" aria-label="Zurück">
+        <!-- Icon: chevron-left (lucide.dev) -->
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <div class="slider-track" id="sliderTrack">
+        <?php foreach ($bestseller as $produkt): ?>
+        <div class="slider-slide">
+          <a href="produkt.php?id=<?php echo $produkt['produkt_id']; ?>">
+            <img src="bild.php?id=<?php echo $produkt['produkt_id']; ?>" alt="<?php echo htmlspecialchars($produkt['name']); ?>" />
+          </a>
+          <div class="slide-caption"><?php echo htmlspecialchars($produkt['name']); ?></div>
         </div>
-        <div class="footer-column">
-          <h4>Kontakt & Öffnungszeiten</h4>
-          <p>
-            📧 hello@flavr.ch<br />📞 +41 78 123 45 67<br />🕒 Mo–Fr:
-            09:00–18:00<br />Sa: 10:00–16:00
-          </p>
+        <?php endforeach; ?>
+      </div>
+      <button class="slider-btn next" id="nextBtn" aria-label="Weiter">
+        <!-- Icon: chevron-right (lucide.dev) -->
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
+    </div>
+    <div class="slider-dots" id="sliderDots"></div>
+
+    <div style="text-align: center; margin-top: 2rem">
+      <a href="shop.php" class="btn-dark">Alle Produkte ansehen
+        <!-- Icon: arrow-right (lucide.dev) -->
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Glücksrad + Gewinnspiel-Formular -->
+<section class="section" style="background: var(--grau-hell)">
+  <div class="container">
+    <div class="section-kopf">
+      <span class="eyebrow">Mitmachen &amp; gewinnen</span>
+      <h2 class="section-titel">Gewürz-Glücksrad</h2>
+      <p class="section-text">Drehe am Rad und sichere dir deinen Vorteil.</p>
+    </div>
+
+    <div class="wheel-form-grid">
+      <div class="wheel-card">
+        <canvas id="wheelCanvas" width="400" height="400"></canvas>
+        <button id="spinWheelBtn" class="btn spin-btn">Drehen</button>
+        <div class="prize-meta">Jeden Monat neue Preise. Viel Glück!</div>
+      </div>
+
+      <div class="form-card<?php if ($formVerstecken) { echo ' is-hidden'; } ?>" id="gewinnspielCard">
+        <h3>Gewinnspiel teilnehmen</h3>
+        <!-- Hier zeigt JavaScript nach dem Drehen den Gewinn an -->
+        <div class="gewinn-hinweis" id="gewinnHinweis"></div>
+        <p>Melde dich beim Newsletter an und erhalte deinen Code per E-Mail.</p>
+
+        <?php if ($gewinnspielOk): ?>
+        <!-- Bestätigung nach erfolgreicher Teilnahme -->
+        <div class="success-msg">
+          <!-- Icon: check-circle (lucide.dev) -->
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.801 10A10 10 0 1 1 17 3.335"/><path d="m9 11 3 3L22 4"/></svg>
+          Vielen Dank für deine Teilnahme!
         </div>
-        <div class="footer-column">
-          <h4>Folge uns</h4>
-          <div class="social-icons">
-            <a href="#">Instagram</a><a href="#">TikTok</a>
+        <?php endif; ?>
+        <?php if ($gewinnspielFehler): ?>
+        <!-- Hinweis, wenn die Eingaben nicht gültig waren -->
+        <div class="error-msg">
+          <!-- Icon: alert-triangle (lucide.dev) -->
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>
+          Bitte fülle das Formular vollständig aus.
+        </div>
+        <?php endif; ?>
+
+        <form id="contestForm" action="submit_gewinnspiel.php" method="post" novalidate>
+          <div class="form-group">
+            <label>Vorname *</label>
+            <input type="text" id="vorname" name="vorname" placeholder="Max" />
+            <div class="error-msg" id="errorVorname"></div>
           </div>
-        </div>
-        <div class="footer-column">
-          <h4>Gruppenmitglieder</h4>
-          <ul>
-            <li>Leonie Walker</li>
-            <li>Olivia Vieli</li>
-            <li>Louisa Scherer</li>
-          </ul>
-        </div>
-        <div class="disclaimer">
-          <p>
-            ⚠️ Dies ist ein Schulprojekt und keine reale Website. Alle Inhalte
-            sind fiktiv.
-          </p>
-          <p>&copy; 2026 flavr. – Gemeinsam genießen</p>
+          <div class="form-group">
+            <label>Nachname *</label>
+            <input type="text" id="nachname" name="nachname" placeholder="Mustermann" />
+            <div class="error-msg" id="errorNachname"></div>
+          </div>
+          <div class="form-group">
+            <label>E-Mail *</label>
+            <input type="email" id="email" name="email" placeholder="max@example.com" />
+            <div class="error-msg" id="errorEmail"></div>
+          </div>
+          <div class="form-group">
+            <label>Woher kennen Sie flavr.? *</label>
+            <select id="referrer" name="referrer">
+              <option value="">-- Bitte wählen --</option>
+              <option value="social">Social Media</option>
+              <option value="freunde">Freunde &amp; Familie</option>
+              <option value="suche">Websuche</option>
+            </select>
+            <div class="error-msg" id="errorReferrer"></div>
+          </div>
+          <div class="form-group checkbox-group">
+            <input type="checkbox" id="terms" name="terms" value="true" />
+            <label>Ich akzeptiere die Teilnahmebedingungen. *</label>
+          </div>
+          <div class="error-msg" id="errorTerms"></div>
+          <button type="submit" class="btn" style="width: 100%; justify-content: center">
+            Teilnehmen
+          </button>
+          <div id="formFeedback"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Split-Block: Geschichten (rotes Band) -->
+<section class="split split-reverse split-rot">
+  <div class="split-media">
+    <img src="images/erlebnisse/Orientalischer_Basar.webp" alt="Gewürze im Markt" />
+  </div>
+  <div class="split-inhalt">
+    <span class="eyebrow">Entdecke neue Welten</span>
+    <h2>Gewürze, die Geschichten erzählen</h2>
+    <p>
+      Jedes Gewürz steht für seine Herkunft, sein Handwerk und seine Geschichte.
+      Entdecke die Welt, Löffel für Löffel.
+    </p>
+    <a href="erlebnisse.php" class="btn-outline">Mehr entdecken
+      <!-- Icon: arrow-right (lucide.dev) -->
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- Kundenstimmen -->
+<?php
+// Stern-Icon einmal als Variable, damit es nicht mehrfach ausgeschrieben werden muss
+$stern = '<svg class="icon" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>';
+?>
+<section class="section">
+  <div class="container">
+    <div class="section-kopf">
+      <span class="eyebrow">Bewertungen</span>
+      <h2 class="section-titel">Was Kunden sagen</h2>
+      <p class="section-text">Die Qualität spricht für sich selbst.</p>
+    </div>
+    <div class="testimonial-grid">
+      <div class="testimonial-card">
+        <div class="sterne"><?php echo str_repeat($stern, 5); ?></div>
+        <p class="zitat">„Diese Gewürze haben meine Küche verändert. Der Geschmack ist intensiv und echt."</p>
+        <div class="person">
+          <span class="person-avatar"></span>
+          <div>
+            <div class="person-name">Maria Schneider</div>
+            <div class="person-rolle">Köchin, Zürich</div>
+          </div>
         </div>
       </div>
-    </footer>
+      <div class="testimonial-card">
+        <div class="sterne"><?php echo str_repeat($stern, 5); ?></div>
+        <p class="zitat">„Endlich Gewürze, die nicht wie Staub schmecken. Ich bestelle regelmässig."</p>
+        <div class="person">
+          <span class="person-avatar"></span>
+          <div>
+            <div class="person-name">Thomas Keller</div>
+            <div class="person-rolle">Privatperson, Basel</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="sterne"><?php echo str_repeat($stern, 5); ?></div>
+        <p class="zitat">„Die Blends sind kreativ und funktionieren wirklich. Sehr empfohlen."</p>
+        <div class="person">
+          <span class="person-avatar"></span>
+          <div>
+            <div class="person-name">Elena Rossi</div>
+            <div class="person-rolle">Restaurantbesitzerin, Bern</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <script src="script.js"></script>
-    <script>
-      // Einfache Klick-Meldungen für die drei Info-Buttons
-      var moreInfoBtn = document.getElementById("moreInfoBtn");
-      if (moreInfoBtn) {
-        moreInfoBtn.addEventListener("click", function () {
-          alert("Erfahre mehr über unsere Gewürze.");
-        });
-      }
-      var interessantBtn = document.getElementById("interessantBtn");
-      if (interessantBtn) {
-        interessantBtn.addEventListener("click", function () {
-          alert("Danke fürs Feedback!");
-        });
-      }
-      var effizientBtn = document.getElementById("effizientBtn");
-      if (effizientBtn) {
-        effizientBtn.addEventListener("click", function () {
-          alert("Schneller Versand – garantiert.");
-        });
-      }
-    </script>
-  </body>
-</html>
+<!-- Abschluss-Aufruf -->
+<section class="cta-band">
+  <h2>Stöbere jetzt im Shop</h2>
+  <p>Finde die Gewürze, die deine nächste Mahlzeit unvergesslich machen.</p>
+  <div class="cta-buttons">
+    <a href="shop.php" class="btn">Entdecken
+      <!-- Icon: arrow-right (lucide.dev) -->
+      <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </a>
+    <a href="#newsletterForm" class="btn-outline">Newsletter</a>
+  </div>
+</section>
+
+<?php require 'footer.php'; ?>
