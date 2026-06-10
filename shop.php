@@ -2,9 +2,12 @@
 // Zentrale Datenbankverbindung einbinden
 require 'db_connect.php';
 
-// Datenbankabfrage: alle aktiven Produkte laden
-$stmt = $pdo->query("SELECT produkt_id, name, beschreibung, preis_chf, herkunft, menge, lagerbestand FROM produkte WHERE aktiv = 1 ORDER BY name");
-$produkte = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// Datenbankabfrage: alle Kategorien laden (für die Filter-Leiste und die Überschriften)
+$stmt = $pdo->query("SELECT kategorie_id, name FROM kategorien ORDER BY kategorie_id");
+$kategorien = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Gewählte Kategorie aus der Adresse lesen (0 = alle Kategorien anzeigen)
+$aktuelleKategorie = intval($_GET['kategorie'] ?? 0);
 
 // Prüfen, ob gerade erfolgreich bestellt wurde
 $bestellungOk = false;
@@ -60,6 +63,35 @@ if (isset($_GET['bestellung']) && $_GET['bestellung'] === 'fehler') {
         <div class="error-msg">⚠️ Bitte fülle alle Pflichtfelder aus und lege etwas in den Warenkorb.</div>
         <?php endif; ?>
 
+        <!-- Filter-Leiste: nach Kategorie filtern (Seite lädt jeweils neu) -->
+        <div class="filter-bar">
+            <a href="shop.php" class="btn btn-outline<?php if ($aktuelleKategorie == 0) { echo ' active'; } ?>">Alle</a>
+            <?php foreach ($kategorien as $kat): ?>
+            <a href="shop.php?kategorie=<?php echo $kat['kategorie_id']; ?>" class="btn btn-outline<?php if ($aktuelleKategorie == $kat['kategorie_id']) { echo ' active'; } ?>"><?php echo htmlspecialchars($kat['name']); ?></a>
+            <?php endforeach; ?>
+        </div>
+
+        <?php
+        // Merker, ob überhaupt Produkte angezeigt wurden
+        $etwasGezeigt = false;
+
+        // Über alle Kategorien gehen und ihre Produkte unter einer Überschrift anzeigen
+        foreach ($kategorien as $kat):
+            // Wenn gefiltert wird und diese Kategorie nicht gewählt ist: überspringen
+            if ($aktuelleKategorie != 0 && $aktuelleKategorie != $kat['kategorie_id']) {
+                continue;
+            }
+
+            // Datenbankabfrage: aktive Produkte dieser Kategorie laden (Prepared Statement)
+            $stmt = $pdo->prepare("SELECT produkt_id, name, preis_chf FROM produkte WHERE aktiv = 1 AND kategorie_id = ? ORDER BY name");
+            $stmt->execute(array($kat['kategorie_id']));
+            $produkte = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Kategorie nur anzeigen, wenn sie auch Produkte hat
+            if (count($produkte) > 0):
+                $etwasGezeigt = true;
+        ?>
+        <h2 class="kategorie-titel"><?php echo htmlspecialchars($kat['name']); ?></h2>
         <div class="product-grid">
             <?php foreach ($produkte as $produkt):
                 // Bildadresse: das Bild kommt direkt aus der Datenbank über bild.php
@@ -77,6 +109,15 @@ if (isset($_GET['bestellung']) && $_GET['bestellung'] === 'fehler') {
                 </div>
             <?php endforeach; ?>
         </div>
+        <?php
+            endif;
+        endforeach;
+
+        // Falls nichts angezeigt wurde (z.B. ungültige Kategorie in der Adresse)
+        if (!$etwasGezeigt):
+        ?>
+        <p>Keine Produkte gefunden.</p>
+        <?php endif; ?>
     </main>
 
     <!-- Modal für Warenkorb mit Bestellformular -->

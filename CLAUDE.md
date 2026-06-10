@@ -121,6 +121,24 @@ MYSQL_PWD='!Q*L7n5haDfggl4q' mysql --skip-ssl \
 ### Wichtige Tabellen
 
 
+## Git-Stil (Commits, PRs, Kommentare)
+
+Alle Git-Texte werden **auf Deutsch** geschrieben, im **einfachen Satz-Stil** und
+**ohne KI-Hinweis** (kein „Co-Authored-By", kein „Generated with Claude").
+
+- **Commit-Titel:** kurzer deutscher Satz, der die Änderung beschreibt –
+  keine Namens-Präfixe. Beispiele:
+  - `Ersetzen aller Bilder durch WebP Versionen`
+  - `HTML-Seiten durch dynamische PHP-Seiten ersetzt`
+  - `hinzufügen SQL Dump für lokales Arbeiten`
+- **Commit-Beschreibung (optional):** 1–4 kurze Stichpunkte auf Deutsch, die die
+  wichtigsten Änderungen auflisten.
+- **Pull-Request-Titel:** kurzer deutscher Satz wie beim Commit-Titel.
+- **Pull-Request-Beschreibung:** kurzer Einleitungssatz, dann eine
+  Stichpunktliste der Änderungen auf Deutsch.
+- **Code-Kommentare:** auf Deutsch, einfach und erklärend (siehe Schreibregeln) –
+  jeden PHP-Datenbankblock kurz kommentieren.
+
 ## Nach jeder Änderung
 
 Wenn eine Datei fertig ist: in **2 Sätzen auf Deutsch** erklären, was sie macht –
