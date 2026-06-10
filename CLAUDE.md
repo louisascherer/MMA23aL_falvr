@@ -104,7 +104,14 @@ Die Seite läuft dann unter `xyz.Smma23aL.bbzwinf.ch`.
 | `gewuerzerlebnisse` | `gewuerzerlebnis_id`, `titel`, `preis_chf`, `ort`, `max_teilnehmer`, `dauer_minuten`, `verfuegbar` | Kochkurse / Events |
 | `buchungen` | `buchung_id`, `kunden_id`, `gewuerzerlebnis_id`, `anzahl_teilnehmer`, `gesamtpreis_chf`, `status` | Buchungen für Erlebnisse |
 
-**Views (nur lesen):** `bestellungen_mit_kunden`, `buchungen_mit_gewuerzerlebnissen`, `produkte_mit_kategorien`, `produkte_mit_zutaten`
+**Views (nur lesen):** `bestellungen_mit_kunden`, `buchungen_mit_gewuerzerlebnissen`, `produkte_mit_kategorien`, `produkte_mit_zutaten`, `produkt_details`
+
+**Bild-Tabellen (mediumblob):** `produktbilder` (Produktbilder), `gewuerzerlebnisbilder` (Bilder der Erlebnisse).
+
+**Wichtig zu `produkt_details`:** Diese View fasst Produkt + Kategorie + Zutaten
+zusammen, damit `produkt.php` ohne JOIN auskommt (nur ein einfaches `SELECT`).
+Die View-Definition liegt in `Datenbank referenz/produkt_details_view.sql` und
+muss auf der Server-DB einmal ausgeführt werden (sonst fehlt sie dort).
 
 **Direktzugriff lokal:**
 ```bash
@@ -120,6 +127,24 @@ MYSQL_PWD='!Q*L7n5haDfggl4q' mysql --skip-ssl \
 
 ### Wichtige Tabellen
 
+
+## Git-Stil (Commits, PRs, Kommentare)
+
+Alle Git-Texte werden **auf Deutsch** geschrieben, im **einfachen Satz-Stil** und
+**ohne KI-Hinweis** (kein „Co-Authored-By", kein „Generated with Claude").
+
+- **Commit-Titel:** kurzer deutscher Satz, der die Änderung beschreibt –
+  keine Namens-Präfixe. Beispiele:
+  - `Ersetzen aller Bilder durch WebP Versionen`
+  - `HTML-Seiten durch dynamische PHP-Seiten ersetzt`
+  - `hinzufügen SQL Dump für lokales Arbeiten`
+- **Commit-Beschreibung (optional):** 1–4 kurze Stichpunkte auf Deutsch, die die
+  wichtigsten Änderungen auflisten.
+- **Pull-Request-Titel:** kurzer deutscher Satz wie beim Commit-Titel.
+- **Pull-Request-Beschreibung:** kurzer Einleitungssatz, dann eine
+  Stichpunktliste der Änderungen auf Deutsch.
+- **Code-Kommentare:** auf Deutsch, einfach und erklärend (siehe Schreibregeln) –
+  jeden PHP-Datenbankblock kurz kommentieren.
 
 ## Nach jeder Änderung
 
