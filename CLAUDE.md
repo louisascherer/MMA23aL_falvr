@@ -104,7 +104,14 @@ Die Seite läuft dann unter `xyz.Smma23aL.bbzwinf.ch`.
 | `gewuerzerlebnisse` | `gewuerzerlebnis_id`, `titel`, `preis_chf`, `ort`, `max_teilnehmer`, `dauer_minuten`, `verfuegbar` | Kochkurse / Events |
 | `buchungen` | `buchung_id`, `kunden_id`, `gewuerzerlebnis_id`, `anzahl_teilnehmer`, `gesamtpreis_chf`, `status` | Buchungen für Erlebnisse |
 
-**Views (nur lesen):** `bestellungen_mit_kunden`, `buchungen_mit_gewuerzerlebnissen`, `produkte_mit_kategorien`, `produkte_mit_zutaten`
+**Views (nur lesen):** `bestellungen_mit_kunden`, `buchungen_mit_gewuerzerlebnissen`, `produkte_mit_kategorien`, `produkte_mit_zutaten`, `produkt_details`
+
+**Bild-Tabellen (mediumblob):** `produktbilder` (Produktbilder), `gewuerzerlebnisbilder` (Bilder der Erlebnisse).
+
+**Wichtig zu `produkt_details`:** Diese View fasst Produkt + Kategorie + Zutaten
+zusammen, damit `produkt.php` ohne JOIN auskommt (nur ein einfaches `SELECT`).
+Die View-Definition liegt in `Datenbank referenz/produkt_details_view.sql` und
+muss auf der Server-DB einmal ausgeführt werden (sonst fehlt sie dort).
 
 **Direktzugriff lokal:**
 ```bash
