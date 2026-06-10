@@ -17,110 +17,68 @@ $zutatenListe = array();
 if ($produkt && $produkt['zutaten']) {
     $zutatenListe = explode(', ', $produkt['zutaten']);
 }
+
+// Titel setzen und den gemeinsamen Kopf laden
+if ($produkt) {
+    $seitentitel = 'flavr. ' . $produkt['produkt_name'];
+} else {
+    $seitentitel = 'flavr. Produkt';
+}
+require 'header.php';
 ?>
-<!doctype html>
-<html lang="de">
 
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>flavr. – <?php if ($produkt) { echo htmlspecialchars($produkt['produkt_name']); } else { echo 'Produkt'; } ?></title>
-    <link rel="stylesheet" href="style.css" />
-</head>
+<div class="container">
+  <?php if (!$produkt): ?>
+  <!-- Kein Produkt mit dieser Nummer gefunden -->
+  <h1 style="margin-top: 3rem">Produkt nicht gefunden</h1>
+  <p style="margin-bottom: 1.5rem">Dieses Produkt gibt es nicht (mehr).</p>
+  <a href="shop.php" class="btn-outline">Zurück zum Shop</a>
+  <?php else: ?>
 
-<body>
-    <header>
-        <div class="top-bar">
-            <div class="logo"><a href="index.php"><img src="images/flavr-logo.webp" alt="flavr." class="logo-img" /></a></div>
-            <div style="display: flex; gap: 1rem; align-items: center">
-                <button class="cart-button">🛒 Warenkorb</button>
-                <a href="shop.php" class="bestellen-link">Bestellen</a>
-            </div>
-            <div class="hamburger"><span></span><span></span><span></span></div>
+  <!-- Zurück-Link oberhalb der Detailkarte -->
+  <a href="shop.php" class="zurueck-link">
+    <!-- Icon: chevron-left (lucide.dev) -->
+    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+    Zurück zum Shop
+  </a>
+
+  <div class="product-detail">
+    <div class="produkt-detail-bild">
+      <img src="bild.php?id=<?php echo $produkt['produkt_id']; ?>" alt="<?php echo htmlspecialchars($produkt['produkt_name']); ?>">
+    </div>
+    <div class="produkt-detail-info">
+      <?php if ($produkt['kategorie_name']): ?>
+      <span class="produkt-eyebrow"><?php echo htmlspecialchars($produkt['kategorie_name']); ?></span>
+      <?php endif; ?>
+      <h1><?php echo htmlspecialchars($produkt['produkt_name']); ?></h1>
+      <div class="produkt-preis"><?php echo number_format($produkt['preis_chf'], 2); ?> CHF</div>
+      <p class="produkt-beschreibung"><?php echo htmlspecialchars($produkt['beschreibung']); ?></p>
+
+      <dl class="produkt-fakten">
+        <div><dt>Herkunft</dt><dd><?php echo htmlspecialchars($produkt['herkunft']); ?></dd></div>
+        <div><dt>Menge</dt><dd><?php echo htmlspecialchars($produkt['menge']); ?></dd></div>
+        <div><dt>Auf Lager</dt><dd><?php echo intval($produkt['lagerbestand']); ?> Stück</dd></div>
+      </dl>
+
+      <?php if (count($zutatenListe) > 0): ?>
+      <div class="zutaten-block">
+        <span class="zutaten-titel">Zutaten</span>
+        <div class="produkt-zutaten">
+          <?php foreach ($zutatenListe as $zutat): ?>
+          <span class="zutat-chip"><?php echo htmlspecialchars($zutat); ?></span>
+          <?php endforeach; ?>
         </div>
-        <div class="nav-links">
-            <a href="index.php">Home</a>
-            <a href="shop.php">Shop</a>
-            <a href="erlebnisse.php">Erlebnisse</a>
-            <a href="ueber-uns.php">Über uns</a>
-        </div>
-    </header>
+      </div>
+      <?php endif; ?>
 
-    <main class="container">
-        <?php if (!$produkt): ?>
-        <!-- Kein Produkt mit dieser Nummer gefunden -->
-        <h1>Produkt nicht gefunden</h1>
-        <p>Dieses Produkt gibt es nicht (mehr).</p>
-        <a href="shop.php" class="btn btn-outline">← Zurück zum Shop</a>
-        <?php else: ?>
+      <button class="btn">
+        <!-- Icon: shopping-cart (lucide.dev) -->
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></svg>
+        In den Warenkorb
+      </button>
+    </div>
+  </div>
+  <?php endif; ?>
+</div>
 
-        <!-- Zurück-Link oberhalb der Detailkarte -->
-        <a href="shop.php" class="zurueck-link">← Zurück zum Shop</a>
-
-        <div class="product-card product-detail">
-            <div class="produkt-detail-bild">
-                <img src="bild.php?id=<?php echo $produkt['produkt_id']; ?>" alt="<?php echo htmlspecialchars($produkt['produkt_name']); ?>">
-            </div>
-            <div class="produkt-detail-info">
-                <?php if ($produkt['kategorie_name']): ?>
-                <span class="produkt-eyebrow"><?php echo htmlspecialchars($produkt['kategorie_name']); ?></span>
-                <?php endif; ?>
-                <h1><?php echo htmlspecialchars($produkt['produkt_name']); ?></h1>
-                <div class="produkt-preis"><?php echo number_format($produkt['preis_chf'], 2); ?> CHF</div>
-                <p class="produkt-beschreibung"><?php echo htmlspecialchars($produkt['beschreibung']); ?></p>
-
-                <dl class="produkt-fakten">
-                    <div><dt>Herkunft</dt><dd><?php echo htmlspecialchars($produkt['herkunft']); ?></dd></div>
-                    <div><dt>Menge</dt><dd><?php echo htmlspecialchars($produkt['menge']); ?></dd></div>
-                    <div><dt>Auf Lager</dt><dd><?php echo intval($produkt['lagerbestand']); ?> Stück</dd></div>
-                </dl>
-
-                <?php if (count($zutatenListe) > 0): ?>
-                <div class="zutaten-block">
-                    <span class="zutaten-titel">Zutaten</span>
-                    <div class="produkt-zutaten">
-                        <?php foreach ($zutatenListe as $zutat): ?>
-                        <span class="zutat-chip"><?php echo htmlspecialchars($zutat); ?></span>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-                <?php endif; ?>
-
-                <button class="btn">In den Warenkorb</button>
-            </div>
-        </div>
-        <?php endif; ?>
-    </main>
-
-    <footer>
-        <div class="footer-container">
-            <div class="footer-column">
-                <h4>flavr.</h4>
-                <p>Gewürze mit Charakter – handverlesen & fair.</p>
-            </div>
-            <div class="footer-column">
-                <h4>Kontakt & Öffnungszeiten</h4>
-                <p>📧 hello@flavr.ch<br>📞 +41 78 123 45 67<br>🕒 Mo–Fr: 09:00–18:00<br>Sa: 10:00–16:00</p>
-            </div>
-            <div class="footer-column">
-                <h4>Folge uns</h4>
-                <div class="social-icons"><a href="#">Instagram</a><a href="#">TikTok</a></div>
-            </div>
-            <div class="footer-column">
-                <h4>Gruppenmitglieder</h4>
-                <ul>
-                    <li>Leonie Walker</li>
-                    <li>Olivia Vieli</li>
-                    <li>Louisa Scherer</li>
-                </ul>
-            </div>
-            <div class="disclaimer">
-                <p>⚠️ Schulprojekt – fiktive Inhalte</p>
-                <p>&copy; 2026 flavr.</p>
-            </div>
-        </div>
-    </footer>
-    <script src="script.js"></script>
-</body>
-
-</html>
+<?php require 'footer.php'; ?>
