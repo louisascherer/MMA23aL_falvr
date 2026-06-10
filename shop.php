@@ -21,7 +21,7 @@ $produkte = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <header>
         <div class="top-bar">
-            <div class="logo"><a href="index.html"><img src="images/flavr-logo.png" alt="flavr." class="logo-img" /></a></div>
+            <div class="logo"><a href="index.html"><img src="images/flavr-logo.webp" alt="flavr." class="logo-img" /></a></div>
             <div style="display: flex; gap: 1rem; align-items: center">
                 <button id="cartBtn" class="cart-button">🛒 Warenkorb (<span id="cartCount">0</span>)</button>
                 <a href="shop.php" class="bestellen-link">Bestellen</a>
