@@ -1,6 +1,6 @@
 <?php
 // db_connect.php – Zentrale Datenbankverbindung
-$host = 'localhost:3306';
+$host = 'localhost';
 $port = 3306;
 $db   = 'louisa-scherer_';
 $user = 'louisa';
