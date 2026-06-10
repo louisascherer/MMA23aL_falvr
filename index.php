@@ -16,6 +16,13 @@ $gewinnspielFehler = false;
 if (isset($_GET['gewinnspiel']) && $_GET['gewinnspiel'] === 'fehler') {
     $gewinnspielFehler = true;
 }
+
+// Das Formular ist am Anfang versteckt: erst nach dem Drehen am Rad sichtbar.
+// Nach dem Absenden (Erfolg oder Fehler) soll es aber sichtbar bleiben.
+$formVerstecken = true;
+if ($gewinnspielOk || $gewinnspielFehler) {
+    $formVerstecken = false;
+}
 ?>
 <!doctype html>
 <html lang="de">
@@ -26,9 +33,6 @@ if (isset($_GET['gewinnspiel']) && $_GET['gewinnspiel'] === 'fehler') {
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <!-- Parallax-Hintergrundcontainer -->
-    <div class="parallax-bg" id="parallaxBg"></div>
-
     <header>
       <div class="top-bar">
         <div class="logo">
@@ -131,9 +135,11 @@ if (isset($_GET['gewinnspiel']) && $_GET['gewinnspiel'] === 'fehler') {
                 Jeden Monat neue Preise<br />Viel Glück!
               </div>
             </div>
-            <div class="form-card">
+            <div class="form-card<?php if ($formVerstecken) { echo ' is-hidden'; } ?>" id="gewinnspielCard">
               <h3>Gewinnspiel teilnehmen</h3>
-              <p>Fülle das Formular aus und nimm teil.</p>
+              <!-- Hier zeigt JavaScript nach dem Drehen den Gewinn an -->
+              <div class="gewinn-hinweis" id="gewinnHinweis"></div>
+              <p>Melde dich bei unserem Newsletter an und erhalte deinen Code per E-Mail.</p>
               <?php if ($gewinnspielOk): ?>
               <!-- Bestätigung nach erfolgreicher Teilnahme -->
               <div class="success-msg">✅ Vielen Dank für deine Teilnahme!</div>
