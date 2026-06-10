@@ -1,81 +1,95 @@
 <?php
-header('Content-Type: application/json');
-require_once 'db_connect.php';
+// submit_bestellungen.php – nimmt die Bestellung aus dem Warenkorb entgegen (einfaches POST)
+require 'db_connect.php';
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    http_response_code(405);
-    echo json_encode(['error' => 'Methode nicht erlaubt']);
-    exit;
-}
+// Die Kundenfelder aus dem Formular holen
+$name = trim($_POST['name'] ?? '');
+$email = trim($_POST['email'] ?? '');
+$adresse = trim($_POST['adresse'] ?? '');
+$plz = trim($_POST['postleitzahl'] ?? '');
+$telefon = trim($_POST['telefon'] ?? '');
+$zahlungsart = trim($_POST['zahlungsart'] ?? '');
 
-$input = json_decode(file_get_contents('php://input'), true);
-if (!$input) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Ungültige JSON-Daten']);
-    exit;
-}
+// Der Warenkorb kommt als Text (JSON) aus dem versteckten Feld – in ein Array umwandeln
+$warenkorbText = $_POST['warenkorb'] ?? '';
+$warenkorb = json_decode($warenkorbText, true);
 
-$name = trim($input['kunde']['name'] ?? '');
-$email = trim($input['kunde']['email'] ?? '');
-$adresse = trim($input['kunde']['adresse'] ?? '');
-$plz = trim($input['kunde']['postleitzahl'] ?? '');
-$telefon = trim($input['kunde']['telefon'] ?? '');
-$zahlungsart = trim($input['zahlungsart'] ?? 'unbekannt');
-$gesamtpreis = floatval($input['gesamtpreis'] ?? 0);
-$produkte = $input['produkte'] ?? [];
-
-if (empty($name) || empty($email) || empty($adresse) || empty($plz) || empty($produkte)) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Unvollständige Bestelldaten']);
-    exit;
+// Sicherheits-Prüfung auf dem Server (JavaScript prüft schon vorher)
+$fehler = false;
+if ($name === '') {
+    $fehler = true;
 }
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    http_response_code(400);
-    echo json_encode(['error' => 'Ungültige E-Mail']);
+    $fehler = true;
+}
+if ($adresse === '') {
+    $fehler = true;
+}
+if ($plz === '') {
+    $fehler = true;
+}
+if (!is_array($warenkorb) || count($warenkorb) === 0) {
+    $fehler = true;
+}
+
+// Bei Fehler zurück zum Shop mit Hinweis
+if ($fehler) {
+    header('Location: shop.php?bestellung=fehler');
     exit;
 }
 
-// Kunde anlegen oder vorhandenen nutzen
+// Datenbankabfrage: prüfen, ob diese E-Mail schon als Kunde existiert
 $stmt = $pdo->prepare('SELECT kunden_id FROM kunden WHERE email = ?');
-$stmt->execute([$email]);
-$kunde = $stmt->fetch();
+$stmt->execute(array($email));
+$vorhandenerKunde = $stmt->fetch(PDO::FETCH_ASSOC);
 
-if ($kunde) {
-    $kunden_id = $kunde['kunden_id'];
+if ($vorhandenerKunde) {
+    $kunden_id = $vorhandenerKunde['kunden_id'];
 } else {
-    $plainPassword = bin2hex(random_bytes(8));
-    $hashedPassword = password_hash($plainPassword, PASSWORD_DEFAULT);
-    $stmt = $pdo->prepare('
-        INSERT INTO kunden (name, email, telefon, adresse, postleitzahl, passwort, newsletter, registrierungsdatum)
-        VALUES (?, ?, ?, ?, ?, ?, 0, NOW())
-    ');
-    $stmt->execute([$name, $email, $telefon, $adresse, $plz, $hashedPassword]);
+    // Neuen Kunden anlegen (Platzhalter-Passwort, da hier kein Login nötig ist)
+    $stmt = $pdo->prepare('INSERT INTO kunden (name, email, telefon, adresse, postleitzahl, passwort, newsletter, registrierungsdatum) VALUES (?, ?, ?, ?, ?, ?, 0, NOW())');
+    $stmt->execute(array($name, $email, $telefon, $adresse, $plz, 'kein-login'));
     $kunden_id = $pdo->lastInsertId();
 }
 
-// Bestellung anlegen
-$stmt = $pdo->prepare('
-    INSERT INTO bestellungen (kunden_id, bestelldatum, gesamtpreis_chf, zahlungsart, lieferadresse, status)
-    VALUES (?, NOW(), ?, ?, ?, "offen")
-');
-$stmt->execute([$kunden_id, $gesamtpreis, $zahlungsart, $adresse]);
-$bestellung_id = $pdo->lastInsertId();
+// Gesamtpreis sicherheitshalber aus den Datenbank-Preisen berechnen
+$gesamtpreis = 0;
+foreach ($warenkorb as $artikel) {
+    $produkt_id = intval($artikel['produkt_id']);
+    $anzahl = intval($artikel['quantity']);
 
-// Bestellpositionen einfügen (mit produkt_id)
-foreach ($produkte as $item) {
-    $produkt_id = intval($item['produkt_id']);
-    $anzahl = intval($item['anzahl']);
-    // Preis aus Datenbank holen (sicherheitshalber)
+    // Datenbankabfrage: aktuellen Preis des Produkts holen
     $stmt = $pdo->prepare('SELECT preis_chf FROM produkte WHERE produkt_id = ?');
-    $stmt->execute([$produkt_id]);
+    $stmt->execute(array($produkt_id));
     $preis = $stmt->fetchColumn();
-    if (!$preis) {
-        http_response_code(400);
-        echo json_encode(['error' => "Produkt ID $produkt_id nicht gefunden"]);
-        exit;
+
+    if ($preis) {
+        $gesamtpreis = $gesamtpreis + ($preis * $anzahl);
     }
-    $stmtPos = $pdo->prepare('INSERT INTO bestellpositionen (bestellung_id, produkt_id, anzahl, preis_chf) VALUES (?, ?, ?, ?)');
-    $stmtPos->execute([$bestellung_id, $produkt_id, $anzahl, $preis]);
 }
 
-echo json_encode(['success' => true, 'bestellung_id' => $bestellung_id, 'message' => 'Bestellung erfolgreich aufgegeben!']);
+// Datenbankabfrage: die Bestellung anlegen
+$stmt = $pdo->prepare('INSERT INTO bestellungen (kunden_id, bestelldatum, gesamtpreis_chf, zahlungsart, lieferadresse, status) VALUES (?, NOW(), ?, ?, ?, "offen")');
+$stmt->execute(array($kunden_id, $gesamtpreis, $zahlungsart, $adresse));
+$bestellung_id = $pdo->lastInsertId();
+
+// Für jede Zeile im Warenkorb eine Bestellposition anlegen
+foreach ($warenkorb as $artikel) {
+    $produkt_id = intval($artikel['produkt_id']);
+    $anzahl = intval($artikel['quantity']);
+
+    // Datenbankabfrage: aktuellen Preis des Produkts holen
+    $stmt = $pdo->prepare('SELECT preis_chf FROM produkte WHERE produkt_id = ?');
+    $stmt->execute(array($produkt_id));
+    $preis = $stmt->fetchColumn();
+
+    if ($preis) {
+        // Datenbankabfrage: die einzelne Position speichern
+        $stmt = $pdo->prepare('INSERT INTO bestellpositionen (bestellung_id, produkt_id, anzahl, preis_chf) VALUES (?, ?, ?, ?)');
+        $stmt->execute(array($bestellung_id, $produkt_id, $anzahl, $preis));
+    }
+}
+
+// Zurück zum Shop mit Erfolgsmeldung und Bestellnummer
+header('Location: shop.php?bestellung=ok&nr=' . $bestellung_id);
+exit;
