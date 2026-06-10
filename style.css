@@ -284,6 +284,50 @@ footer {
   margin: 2rem 0 1rem;
 }
 
+/* "Alle anzeigen"-Kachel in der Übersicht */
+.show-all-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-weight: 600;
+  color: #c17b4c;
+  border: 2px dashed #c17b4c;
+}
+
+.show-all-card:hover {
+  background: #c17b4c;
+  color: white;
+}
+
+/* Seiten-Navigation (Paginierung) */
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  margin: 2rem 0;
+}
+
+.pagination a {
+  display: inline-block;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid #c17b4c;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #c17b4c;
+}
+
+.pagination a.active {
+  background: #c17b4c;
+  color: white;
+}
+
+.pagination a:hover {
+  background: #c17b4c;
+  color: white;
+}
+
 /* ===== SECTIONS ===== */
 section {
   padding: 4rem 0;
