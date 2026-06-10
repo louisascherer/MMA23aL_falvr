@@ -111,13 +111,16 @@ document.addEventListener("DOMContentLoaded", () => {
     if (el) el.innerText = msg;
   }
   function clearErrors() {
-    [
+    var ids = [
       "errorVorname",
       "errorNachname",
       "errorEmail",
       "errorReferrer",
       "errorTerms",
-    ].forEach((id) => showError(id, ""));
+    ];
+    for (var i = 0; i < ids.length; i++) {
+      showError(ids[i], "");
+    }
   }
 
   function validateForm() {
@@ -164,60 +167,16 @@ document.addEventListener("DOMContentLoaded", () => {
     return valid;
   }
 
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  form.addEventListener("submit", function (e) {
     clearErrors();
+    // Wenn die Eingaben nicht gültig sind: Formular NICHT abschicken
     if (!validateForm()) {
+      e.preventDefault();
       document.getElementById("formFeedback").innerHTML =
         '<div style="color:#b33;">⚠️ Bitte korrigieren.</div>';
       return;
     }
-    const formData = new FormData(form);
-    formData.append(
-      "terms",
-      document.getElementById("terms").checked ? "true" : "false",
-    );
-
-    try {
-      const response = await fetch("submit_gewinnspiel.php", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: formData,
-      });
-      const feedback = document.getElementById("formFeedback");
-
-      const text = await response.text();
-      let result = {};
-      try {
-        result = text ? JSON.parse(text) : {};
-      } catch (parseErr) {
-        feedback.innerHTML = `<div style="color:#b33;">⚠️ Serverfehler. Ungültige Server-Antwort: ${text}</div>`;
-        setTimeout(() => (feedback.innerHTML = ""), 5000);
-        return;
-      }
-
-      if (!response.ok) {
-        const errMsg =
-          result && (result.error || result.message)
-            ? Array.isArray(result.error)
-              ? result.error.join(", ")
-              : result.error || result.message
-            : response.statusText || "Fehler";
-        feedback.innerHTML = `<div style="color:#b33;">⚠️ ${errMsg}</div>`;
-      } else if (result.success) {
-        feedback.innerHTML = `<div class="success-msg">✅ ${result.message}</div>`;
-        form.reset();
-      } else {
-        let errMsg = Array.isArray(result.error)
-          ? result.error.join(", ")
-          : result.error || "Fehler";
-        feedback.innerHTML = `<div style="color:#b33;">⚠️ ${errMsg}</div>`;
-      }
-      setTimeout(() => (feedback.innerHTML = ""), 5000);
-    } catch (err) {
-      document.getElementById("formFeedback").innerHTML =
-        `<div style="color:#b33;">⚠️ Serverfehler. ${err.message || err}.</div>`;
-    }
+    // Alles gültig: das Formular wird normal an submit_gewinnspiel.php geschickt
   });
 });
 
@@ -481,68 +440,51 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Bestellung abschicken (mit produkt_id)
+  // Bestellung abschicken: prüfen und dann das Formular normal absenden
   const checkoutForm = document.getElementById("checkoutForm");
   if (checkoutForm) {
-    checkoutForm.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const name = document.getElementById("checkoutName").value.trim();
-      const email = document.getElementById("checkoutEmail").value.trim();
-      const adresse = document.getElementById("checkoutAdresse").value.trim();
-      const plz = document.getElementById("checkoutPLZ").value.trim();
-      const telefon = document.getElementById("checkoutTel").value.trim();
-      const zahlungsart = document.getElementById("checkoutPayment").value;
+    checkoutForm.addEventListener("submit", function (e) {
+      var name = document.getElementById("checkoutName").value.trim();
+      var email = document.getElementById("checkoutEmail").value.trim();
+      var adresse = document.getElementById("checkoutAdresse").value.trim();
+      var plz = document.getElementById("checkoutPLZ").value.trim();
+
+      // Pflichtfelder prüfen
       if (!name || !email || !adresse || !plz) {
+        e.preventDefault();
         alert("Bitte füllen Sie alle Pflichtfelder aus.");
         return;
       }
+      // E-Mail-Format prüfen
       if (!/^[^\s@]+@([^\s@]+\.)+[^\s@]+$/.test(email)) {
+        e.preventDefault();
         alert("Ungültige E-Mail.");
         return;
       }
+      // Warenkorb darf nicht leer sein
       if (cart.length === 0) {
+        e.preventDefault();
         alert("Warenkorb ist leer.");
         return;
       }
-      const produkte = cart.map((item) => ({
-        produkt_id: item.produkt_id,
-        anzahl: item.quantity,
-      }));
-      const total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
-      const payload = {
-        kunde: { name, email, adresse, postleitzahl: plz, telefon },
-        zahlungsart,
-        gesamtpreis: total,
-        produkte,
-      };
-      try {
-        const resp = await fetch("submit_bestellung.php", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-        const result = await resp.json();
-        const feedback = document.getElementById("checkoutFeedback");
-        if (result.success) {
-          feedback.innerHTML = `<div class="success-msg">✅ ${result.message} (Bestell-Nr. ${result.bestellung_id})</div>`;
-          localStorage.removeItem("flavrCart");
-          cart = [];
-          updateCartUI();
-          checkoutForm.reset();
-          setTimeout(() => {
-            cartModal.style.display = "none";
-            feedback.innerHTML = "";
-          }, 3000);
-        } else {
-          feedback.innerHTML = `<div style="color:#b33;">⚠️ ${result.error || "Fehler"}</div>`;
-        }
-      } catch (err) {
-        document.getElementById("checkoutFeedback").innerHTML =
-          '<div style="color:#b33;">⚠️ Serverfehler. Bitte später erneut versuchen.</div>';
+
+      // Warenkorb als Text ins versteckte Feld schreiben
+      // Danach wird das Formular normal an submit_bestellungen.php geschickt
+      var warenkorbInput = document.getElementById("warenkorbInput");
+      if (warenkorbInput) {
+        warenkorbInput.value = JSON.stringify(cart);
       }
     });
   }
+
   loadCart();
+
+  // Nach erfolgreicher Bestellung ist der Warenkorb erledigt: leeren
+  if (window.location.search.indexOf("bestellung=ok") !== -1) {
+    localStorage.removeItem("flavrCart");
+    cart = [];
+    updateCartUI();
+  }
 });
 
 // ===== ZUSÄTZLICHE EVENT-LISTENER (für index.html) =====
