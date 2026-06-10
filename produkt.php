@@ -33,7 +33,7 @@ if ($produkt && $produkt['zutaten']) {
         <div class="top-bar">
             <div class="logo"><a href="index.php"><img src="images/flavr-logo.webp" alt="flavr." class="logo-img" /></a></div>
             <div style="display: flex; gap: 1rem; align-items: center">
-                <button id="cartBtn" class="cart-button">🛒 Warenkorb (<span id="cartCount">0</span>)</button>
+                <button class="cart-button">🛒 Warenkorb</button>
                 <a href="shop.php" class="bestellen-link">Bestellen</a>
             </div>
             <div class="hamburger"><span></span><span></span><span></span></div>
@@ -57,11 +57,7 @@ if ($produkt && $produkt['zutaten']) {
         <!-- Zurück-Link oberhalb der Detailkarte -->
         <a href="shop.php" class="zurueck-link">← Zurück zum Shop</a>
 
-        <div class="product-card product-detail"
-            data-produkt-id="<?php echo $produkt['produkt_id']; ?>"
-            data-name="<?php echo htmlspecialchars($produkt['produkt_name']); ?>"
-            data-price="<?php echo $produkt['preis_chf']; ?>"
-            data-image="bild.php?id=<?php echo $produkt['produkt_id']; ?>">
+        <div class="product-card product-detail">
             <div class="produkt-detail-bild">
                 <img src="bild.php?id=<?php echo $produkt['produkt_id']; ?>" alt="<?php echo htmlspecialchars($produkt['produkt_name']); ?>">
             </div>
@@ -90,41 +86,11 @@ if ($produkt && $produkt['zutaten']) {
                 </div>
                 <?php endif; ?>
 
-                <button class="btn add-to-cart">In den Warenkorb</button>
+                <button class="btn">In den Warenkorb</button>
             </div>
         </div>
         <?php endif; ?>
     </main>
-
-    <!-- Modal für Warenkorb mit Bestellformular -->
-    <div id="cartModal" class="cart-modal">
-        <div class="cart-modal-content">
-            <span class="close-modal">&times;</span>
-            <h2>Dein Warenkorb</h2>
-            <div id="cartItems"></div>
-            <div class="cart-total">Total: <span id="cartTotal">0.00</span> CHF</div>
-            <h3 style="margin-top:1.5rem;">Lieferadresse</h3>
-            <form id="checkoutForm" action="submit_bestellungen.php" method="post">
-                <div class="form-group"><label>Vor- und Nachname *</label><input type="text" id="checkoutName" name="name"></div>
-                <div class="form-group"><label>E-Mail *</label><input type="email" id="checkoutEmail" name="email"></div>
-                <div class="form-group"><label>Adresse *</label><input type="text" id="checkoutAdresse" name="adresse"></div>
-                <div class="form-group"><label>Postleitzahl *</label><input type="text" id="checkoutPLZ" name="postleitzahl"></div>
-                <div class="form-group"><label>Telefon (optional)</label><input type="text" id="checkoutTel" name="telefon"></div>
-                <div class="form-group"><label>Zahlungsart *</label>
-                    <select id="checkoutPayment" name="zahlungsart">
-                        <option value="Kreditkarte">Kreditkarte</option>
-                        <option value="PayPal">PayPal</option>
-                        <option value="TWINT">TWINT</option>
-                        <option value="Rechnung">Rechnung</option>
-                    </select>
-                </div>
-                <!-- Verstecktes Feld: hier schreibt JavaScript den Warenkorb als Text hinein -->
-                <input type="hidden" id="warenkorbInput" name="warenkorb" value="">
-                <button type="submit" class="btn" style="width:100%">Jetzt kaufen</button>
-                <div id="checkoutFeedback" style="margin-top:1rem;"></div>
-            </form>
-        </div>
-    </div>
 
     <footer>
         <div class="footer-container">
