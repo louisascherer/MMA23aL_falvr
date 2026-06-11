@@ -350,14 +350,63 @@ header {
 
 .hero-media {
   height: 100%;
-  min-height: 340px;
-  overflow: hidden;
-  border-radius: var(--radius);
+  min-height: 440px;
+  overflow: visible;
+  display: flex;
+  align-items: flex-end;
 }
-.hero-media img {
+
+/* Dreier-Glasreihe: Chiliflocken in der Mitte, Paprika links, Piment rechts */
+.hero-glaeschen {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  /* Gruppe hochskalieren, da die Bilder viel Leerraum enthalten */
+  /* translateY(10%) schiebt die Gruppe nach unten, damit oben Luft bleibt */
+  transform: scale(1.4) translateY(10%);
+  transform-origin: center bottom;
+}
+
+.glas-mitte {
+  width: 68%;
+  position: relative;
+  z-index: 2;
+  animation: glas-mitte-rein 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.glas-links {
+  width: 46%;
+  position: relative;
+  z-index: 1;
+  margin-right: -40%;
+  animation: glas-links-rein 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+}
+
+.glas-rechts {
+  width: 46%;
+  position: relative;
+  z-index: 1;
+  margin-left: -40%;
+  animation: glas-rechts-rein 0.85s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
+}
+
+/* Chiliflocken: subtil von unten reinkommen */
+@keyframes glas-mitte-rein {
+  from { opacity: 0; transform: translateY(35px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Paprika: aus der Mitte nach links auffächern + nach links drehen */
+@keyframes glas-links-rein {
+  from { opacity: 0; transform: translateX(70%) translateY(-5%) rotate(0deg); }
+  to   { opacity: 1; transform: translateX(0) translateY(-15%) rotate(-11deg); }
+}
+
+/* Piment: aus der Mitte nach rechts auffächern + nach rechts drehen */
+@keyframes glas-rechts-rein {
+  from { opacity: 0; transform: translateX(-70%) translateY(-5%) rotate(0deg); }
+  to   { opacity: 1; transform: translateX(0) translateY(-15%) rotate(11deg); }
 }
 
 /* ===== FEATURE-STREIFEN ===== */
@@ -1268,9 +1317,15 @@ footer {
     grid-template-columns: 1fr;
   }
   .hero-media {
-    min-height: 240px;
+    min-height: 320px;
     order: -1;
   }
+  .hero-glaeschen {
+    transform: scale(1.25) translateY(10%);
+  }
+  .glas-mitte { width: 62%; }
+  .glas-links,
+  .glas-rechts { width: 42%; }
   .wheel-card,
   .form-card {
     max-width: none;

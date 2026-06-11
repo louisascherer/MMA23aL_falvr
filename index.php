@@ -48,7 +48,11 @@ require 'header.php';
       </div>
     </div>
     <div class="hero-media">
-      <img src="images/produktbilder/rote_Chiliflocken.webp" alt="Rote Chiliflocken" />
+      <div class="hero-glaeschen">
+        <img class="glas-links" src="images/produktbilder/Paprika.webp" alt="Paprika" />
+        <img class="glas-mitte" src="images/produktbilder/rote_Chiliflocken.webp" alt="Rote Chiliflocken" />
+        <img class="glas-rechts" src="images/produktbilder/Pimentpfefferkoerner.webp" alt="Pimentpfefferkörner" />
+      </div>
     </div>
   </div>
 </section>
