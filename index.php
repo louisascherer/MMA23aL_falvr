@@ -48,7 +48,7 @@ require 'header.php';
       </div>
     </div>
     <div class="hero-media">
-      <img src="images/produktbilder/rote_chiliflocken.webp" alt="Rote Chiliflocken" />
+      <img src="images/produktbilder/rote_Chiliflocken.webp" alt="Rote Chiliflocken" />
     </div>
   </div>
 </section>
