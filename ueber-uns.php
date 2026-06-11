@@ -7,7 +7,7 @@ require 'header.php';
 <!-- Split-Block: Vorstellung -->
 <section class="split">
   <div class="split-media">
-    <img src="images/Schokolade_und_Gewürze.webp" alt="Gewürze und Zutaten" />
+    <img src="images/erlebnisse/Schokolade_und_Gewuerze.webp" alt="Gewürze und Zutaten" />
   </div>
   <div class="split-inhalt">
     <span class="eyebrow">Warum flavr.</span>

@@ -1,6 +1,6 @@
 <?php
 // db_connect.php – Zentrale Datenbankverbindung
-$host = 'localhost';
+$host = 'flavr.Smma23aL.bbzwinf.ch';
 $port = 3306;
 $db   = 'louisa-scherer_';
 $user = 'louisa';
@@ -8,7 +8,7 @@ $pass = '!Q*L7n5haDfggl4q';
 
 try {
     $pdo = new PDO(
-        "mysql:host=$host;port=$port;dbname=$db;charset=utf8",
+        "mysql:host=$host;port=$port;dbname=$db;charset=utf8mb4",
         $user,
         $pass
     );
