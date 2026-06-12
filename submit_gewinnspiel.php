@@ -2,7 +2,9 @@
 // submit_gewinnspiel.php – nimmt das Gewinnspiel-Formular entgegen (einfaches POST)
 require 'db_connect.php';
 
-// Die Felder aus dem Formular holen
+// Die Felder aus dem Formular holen.
+// "?? ''" heisst: falls ein Feld fehlt, wird ein leerer Text genommen
+// (so gibt es keine Fehlermeldung, wenn ein Feld nicht mitgeschickt wurde).
 $vorname = trim($_POST['vorname'] ?? '');
 $nachname = trim($_POST['nachname'] ?? '');
 $email = trim($_POST['email'] ?? '');
@@ -41,8 +43,9 @@ $stmt->execute(array($email));
 $vorhandenerKunde = $stmt->fetch(PDO::FETCH_ASSOC);
 
 // Wenn der Kunde neu ist: anlegen (Teilnehmer brauchen kein Login, daher Platzhalter)
+// newsletter = 1, weil die Teilnahme am Gewinnspiel gleichzeitig die Newsletter-Anmeldung ist
 if (!$vorhandenerKunde) {
-    $stmt = $pdo->prepare('INSERT INTO kunden (name, email, telefon, adresse, postleitzahl, passwort, newsletter, registrierungsdatum) VALUES (?, ?, ?, ?, ?, ?, 0, NOW())');
+    $stmt = $pdo->prepare('INSERT INTO kunden (name, email, telefon, adresse, postleitzahl, passwort, newsletter, registrierungsdatum) VALUES (?, ?, ?, ?, ?, ?, 1, NOW())');
     $stmt->execute(array($name, $email, '', '', '', 'kein-login'));
 }
 

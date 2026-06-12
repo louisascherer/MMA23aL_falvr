@@ -1,181 +1,81 @@
-# FLAVR Kräutershop – Projektanleitung für Claude
+# CLAUDE.md — FLAVR Gewürz-Webshop
 
-## Worum geht es?
+Schulprojekt **M291**, Klasse MMA23aL. Kleiner Gewürz-Webshop in **PHP + MariaDB**,
+gehostet auf **Plesk**. Wird in einer **mündlichen Prüfung** erklärt → der Code muss
+von Schüler:innen **ohne tiefes PHP/JS-Wissen** verstanden und erklärt werden können.
+**Einfach und lesbar schlägt clever und kurz.**
+Team: Leonie Walker, Louisa Scherer (Plesk-Verantwortliche), Olivia Vieli.
 
-Schulprojekt: ein kleiner Webshop für einen Kräutershop namens FLAVR, gebaut
-mit **PHP** und einer **MariaDB/MySQL-Datenbank** auf einem Schulserver (Plesk).
-Das Projekt wird in einer **mündlichen Prüfung** erklärt.
+## Absolute Regeln (PHP und JS)
 
-**Wichtigste Konsequenz daraus:** Der Code muss von Schülern **ohne tiefes
-PHP/JS-Wissen** verstanden und mündlich erklärt werden können. Einfachheit und
-Lesbarkeit sind wichtiger als clevere oder kurze Lösungen.
+1. **Keine Pfeilfunktionen** – immer normales `function`.
+2. **Kein ternärer Operator `? :`** – immer `if`/`else`. (`??` ist erlaubt, aber kurz kommentieren.)
+3. **Lieber 5 einfache Zeilen als 1 clevere Zeile.** Keine seltenen Sprachfeatures, keine Tricks.
 
-## Schreibregeln (IMMER einhalten)
+## Absolute Regeln (PHP)
 
-Diese Regeln gelten für allen PHP- und JavaScript-Code in diesem Projekt:
+4. **Jeden Datenbank-Block deutsch kommentieren** (was macht die Abfrage).
+5. **Prepared Statements** für jede Abfrage mit Benutzereingabe: `?` als Platzhalter + `execute(array(...))`.
+6. **`htmlspecialchars()`** um jede Text-Ausgabe aus der DB im HTML. Zahlen über `intval()` / `number_format()`.
+7. **Views statt JOINs.** Daten aus mehreren Tabellen → eine View in der DB anlegen, im PHP nur `SELECT ... FROM <view>`. Neue View zusätzlich als `.sql` sichern, damit sie auf dem Server neu angelegt werden kann.
 
-1. **Keine Pfeilfunktionen** (`=>`). Immer normale `function`-Syntax.
-2. **Kein ternärer Operator** (`? :`). Immer `if`/`else` ausschreiben.
-3. **Jeden PHP-Datenbankblock auf Deutsch kommentieren** – kurz erklären, was die
-   Abfrage macht.
-4. **Lieber 5 einfache Zeilen als 1 clevere Zeile.** Keine verschachtelten
-   Tricks, keine selten genutzten Sprachfeatures.
-5. **Prepared Statements** für alle Datenbankabfragen mit Benutzereingaben
-   (Schutz vor SQL-Injection). Werte werden mit `?` und `execute(array(...))`
-   übergeben.
-6. **`htmlspecialchars()`** um alle Ausgaben aus der Datenbank im HTML
-   (Schutz vor XSS).
-7. **Keine HTML5-`required`-Attribute und kein AJAX** – Formularprüfung im
-   Browser geschieht mit einfachem JavaScript.
-8. **SQL-Views statt JOINs im PHP.** Müssen Daten aus mehreren Tabellen
-   kombiniert werden, eine **View in der Datenbank** anlegen und im PHP nur ein
-   einfaches `SELECT ... FROM <view>` schreiben. So steht im Seitencode kein
-   JOIN, den man in der Prüfung erklären müsste. View-Definitionen als `.sql`
-   in `Datenbank referenz/` ablegen (Beispiel: `produkt_details_view.sql`).
+## Absolute Regeln (Formulare)
 
-## Dateistruktur
+8. **Kein HTML5-`required`, kein AJAX.** Ablauf immer: Browser-Prüfung mit einfachem JS (`novalidate`) → Server prüft nochmal → `header('Location: …')`-Redirect mit Status (`?xy=ok` / `?xy=fehler`), Seite zeigt die Meldung an.
 
-| Datei/Ordner | Aufgabe |
-|---|---|
-| `db_connect.php` | Baut die PDO-Verbindung zur Datenbank auf (`$pdo`). Wird per `require` in jede Seite eingebunden. |
-| `index.php` | Startseite: Bestseller-Slider (aus DB), Glücksrad, Gewinnspiel-Formular. |
-| `shop.php` | Produktübersicht: Kategorie-Filter, Gruppierung mit Überschriften, Vorschau (3/Kategorie) in der „Alle"-Ansicht, Paginierung (12/Seite) je Kategorie, Warenkorb-Modal. |
-| `produkt.php` | Produkt-Detailseite (`?id=`). Nutzt die View `produkt_details`. |
-| `erlebnisse.php` | Gewürzerlebnisse aus der DB. |
-| `ueber-uns.php` | Statische Info-Seite. |
-| `bild.php` | Gibt ein Produktbild (BLOB) aus `produktbilder` aus (`?id=`). |
-| `erlebnisbild.php` | Gibt ein Erlebnisbild (BLOB) aus `gewuerzerlebnisbilder` aus (`?id=`). |
-| `submit_gewinnspiel.php` | Verarbeitet das Gewinnspiel-Formular (POST), legt Kunde an, leitet zurück. |
-| `submit_bestellungen.php` | Verarbeitet die Bestellung (POST), legt Kunde/Bestellung/Positionen an. |
-| `script.js` | Warenkorb (localStorage), Slider, Glücksrad, Formular-Validierung im Browser. |
-| `style.css` | Alle Styles. |
-| `images/` | Statische Bilder (z.B. Logo) als WebP. |
-| `Datenbank referenz/` | SQL-Dump der DB und View-Definitionen (`.sql`). |
+## Workflow
 
-## Bilder
+- **Nach jeder fertigen Datei:** in **2 Sätzen auf Deutsch** erklären, was sie macht (Prüfungs-Vorbereitung).
+- **Git & alle Texte (Commits, PRs, Kommentare):** auf **Deutsch**, einfacher Satzstil, **kein KI-Hinweis** (kein „Co-Authored-By", kein „Generated with…"). Commit-Titel = kurzer Satz; optionale Beschreibung = 1–4 Stichpunkte.
 
-- **Statische Bilder** (Logo, Deko) liegen im `images/`-Ordner als **WebP**,
-  maximal **1920px** breit.
-- **Produkt- und Erlebnisbilder** liegen als `mediumblob` in der Datenbank und
-  werden über `bild.php?id=` bzw. `erlebnisbild.php?id=` ausgegeben (nicht als
-  Datei verlinkt).
-- **Neue Bilder** immer zu WebP (max. 1920px Breite, Höhe proportional)
-  konvertieren. ffmpeg hat in dieser Umgebung **keinen** WebP-Encoder – deshalb
-  mit `sips` skalieren und mit `cwebp` konvertieren.
+## Lokal starten (Windows / XAMPP)
 
-## Lokale Entwicklung
+```powershell
+# PHP-Server (Seite dann auf http://localhost:8080)
+& "C:\xampp\php\php.exe" -S localhost:8080
 
-Für die lokale Entwicklung läuft eine **MariaDB-Kopie** der Produktionsdatenbank
-auf dem Mac (installiert via Homebrew). PHP verbindet sich auf `localhost`.
-
-### Lokalen Server starten
-
-```bash
-# MariaDB starten (einmalig, läuft danach automatisch beim Login)
-brew services start mariadb
-
-# PHP-Entwicklungsserver starten
-cd Documents/GitHub/MMA23aL_falvr
-php -S localhost:8080
+# Direkter DB-Zugriff (Passwort über Umgebungsvariable)
+$env:MYSQL_PWD = '!Q*L7n5haDfggl4q'
+& "C:\xampp\mysql\bin\mysql.exe" --skip-ssl -h "flavr.Smma23aL.bbzwinf.ch" -u "louisa" "louisa-scherer_"
 ```
 
-Die Seite ist dann unter **http://localhost:8080** erreichbar.
-
-### Datenbankverbindung (`db_connect.php`)
-
-Aktuell zeigt `db_connect.php` auf **localhost** (lokale Entwicklung):
-
-```php
-$host = 'localhost';
-$db   = 'louisa-scherer_';
-$user = 'louisa';
-$pass = '!Q*L7n5haDfggl4q';
-```
-
-### ⚠️ VOR DER ABGABE: Host auf Schulserver umstellen
-
-Bevor die Seite auf den Plesk-Server hochgeladen wird, muss in `db_connect.php`
-der Host von `localhost` auf die bbzwinf.ch-Adresse geändert werden:
-
-```php
-$host = 'xyz.Smma23aL.bbzwinf.ch'; // <-- vor Abgabe eintragen
-```
-
-### Auf den Server hochladen
-
-Dateien per Plesk-Dateimanager oder FTP hochladen.
-Die Seite läuft dann unter `xyz.Smma23aL.bbzwinf.ch`.
-
+`db_connect.php` zeigt **bereits auf den Schulserver** (auch lokal wird damit gearbeitet, es gibt keine separate lokale DB). Hochladen auf Plesk per Dateimanager/FTP.
 
 ## Datenbank
 
-### Zugangsdaten (lokal & Schulserver)
+Host `flavr.Smma23aL.bbzwinf.ch` · Port `3306` · DB `louisa-scherer_` · User `louisa` · Passwort `!Q*L7n5haDfggl4q`
 
-| | Lokal | Schulserver |
-|---|---|---|
-| Host | `localhost` | `xyz.Smma23aL.bbzwinf.ch` |
-| Datenbank | `louisa-scherer_` | `louisa-scherer_` |
-| User | `louisa` | `louisa` |
-| Passwort | `!Q*L7n5haDfggl4q` | `!Q*L7n5haDfggl4q` |
+**Tabellen (wichtigste Spalten):**
+- `produkte` (produkt_id, name, beschreibung, preis_chf, menge, kategorie_id, lagerbestand, aktiv)
+- `kategorien` (kategorie_id, name, beschreibung)
+- `produktbilder` (produktbild_id, produkt_id, bilddaten = BLOB, ist_hauptbild)
+- `zutaten` + `produkt_zutaten` (Verknüpfung Produkt ↔ Zutat)
+- `kunden` (kunden_id, name, email = UNIQUE, telefon, adresse, postleitzahl, passwort, newsletter, registrierungsdatum)
+- `bestellungen` + `bestellpositionen`
+- `gewuerzerlebnisse` (…, ort, dauer_minuten, verfuegbar) + `gewuerzerlebnisbilder` (BLOB) + `buchungen`
 
-### Tabellenstruktur
+**Views (nur lesen):** `produkt_details`, `produkte_mit_kategorien`, `produkte_mit_zutaten`, `bestellungen_mit_kunden`, `buchungen_mit_gewuerzerlebnissen`. `produkt.php` nutzt `produkt_details` (Produkt + Kategorie + Zutaten ohne JOIN).
 
-| Tabelle | Wichtigste Spalten | Beschreibung |
-|---|---|---|
-| `produkte` | `produkt_id`, `name`, `beschreibung`, `preis_chf`, `menge`, `kategorie_id`, `lagerbestand`, `aktiv` | Alle Gewürze/Kräuter im Shop |
-| `kategorien` | `kategorie_id`, `name`, `beschreibung` | Produktkategorien (z.B. Pfeffersorten) |
-| `produktbilder` | `produktbild_id`, `produkt_id`, `bilddaten` (BLOB), `ist_hauptbild` | Bilder der Produkte |
-| `zutaten` | `zutat_id`, `name` | Zutatenliste für Produkte |
-| `produkt_zutaten` | `produkt_id`, `zutat_id` | Verknüpfungstabelle Produkt ↔ Zutaten |
-| `kunden` | `kunden_id`, `name`, `email`, `adresse`, `postleitzahl`, `passwort`, `newsletter` | Registrierte Kunden |
-| `bestellungen` | `bestellung_id`, `kunden_id`, `bestelldatum`, `gesamtpreis_chf`, `zahlungsart`, `status` | Bestellköpfe |
-| `bestellpositionen` | `position_id`, `bestellung_id`, `produkt_id`, `anzahl`, `preis_chf` | Einzelne Positionen pro Bestellung |
-| `gewuerzerlebnisse` | `gewuerzerlebnis_id`, `titel`, `preis_chf`, `ort`, `max_teilnehmer`, `dauer_minuten`, `verfuegbar` | Kochkurse / Events |
-| `buchungen` | `buchung_id`, `kunden_id`, `gewuerzerlebnis_id`, `anzahl_teilnehmer`, `gesamtpreis_chf`, `status` | Buchungen für Erlebnisse |
+**Bilder:** Produkt-/Erlebnisbilder liegen als BLOB in der DB, ausgegeben über `bild.php?id=` bzw. `erlebnisbild.php?id=`.
 
-**Views (nur lesen):** `bestellungen_mit_kunden`, `buchungen_mit_gewuerzerlebnissen`, `produkte_mit_kategorien`, `produkte_mit_zutaten`, `produkt_details`
+## Dateien
 
-**Bild-Tabellen (mediumblob):** `produktbilder` (Produktbilder), `gewuerzerlebnisbilder` (Bilder der Erlebnisse).
+| Datei | Aufgabe |
+|---|---|
+| `db_connect.php` | PDO-Verbindung (`$pdo`), per `require` in jede Seite eingebunden |
+| `header.php` / `footer.php` | Gemeinsamer Kopf/Fuss (Nav, Logo, Footer mit Newsletter + Team-Namen + Disclaimer) |
+| `index.php` | Startseite: Hero, Bestseller-Slider (DB), Glücksrad + Gewinnspiel-Formular |
+| `shop.php` | Produktübersicht: Kategorie-Filter, Gruppierung, Vorschau (3/Kat.), Paginierung (12/Seite) |
+| `produkt.php` | Detailseite (`?id=`), nutzt View `produkt_details` |
+| `erlebnisse.php` | Gewürzerlebnisse aus der DB |
+| `ueber-uns.php` | Statische Info-Seite |
+| `bild.php` / `erlebnisbild.php` | Geben ein Bild (BLOB) aus der DB aus (`?id=`) |
+| `submit_gewinnspiel.php` | Gewinnspiel-Formular → Kunde anlegen (`newsletter = 1`) |
+| `submit_newsletter.php` | Footer-Newsletter → Kunde anlegen/aktualisieren (`newsletter = 1`) |
+| `script.js` | Navigation/Hamburger, Slider, Glücksrad, Formular-Validierung im Browser |
+| `style.css` | Alle Styles |
+| `images/` | Statische Bilder als WebP (max. 1920px), Logos (SVG) · `font/` = Schriftart |
 
-**Wichtig zu `produkt_details`:** Diese View fasst Produkt + Kategorie + Zutaten
-zusammen, damit `produkt.php` ohne JOIN auskommt (nur ein einfaches `SELECT`).
-Die View-Definition liegt in `Datenbank referenz/produkt_details_view.sql` und
-muss auf der Server-DB einmal ausgeführt werden (sonst fehlt sie dort).
+## Bilder hinzufügen
 
-**Direktzugriff lokal:**
-```bash
-mariadb -u louisa -p'!Q*L7n5haDfggl4q' 'louisa-scherer_'
-```
-
-**Direktzugriff Schulserver** (kein SSL):
-```bash
-MYSQL_PWD='!Q*L7n5haDfggl4q' mysql --skip-ssl \
-  -h 'xyz.Smma23aL.bbzwinf.ch' \
-  -u 'louisa' 'louisa-scherer_'
-```
-
-### Wichtige Tabellen
-
-
-## Git-Stil (Commits, PRs, Kommentare)
-
-Alle Git-Texte werden **auf Deutsch** geschrieben, im **einfachen Satz-Stil** und
-**ohne KI-Hinweis** (kein „Co-Authored-By", kein „Generated with Claude").
-
-- **Commit-Titel:** kurzer deutscher Satz, der die Änderung beschreibt –
-  keine Namens-Präfixe. Beispiele:
-  - `Ersetzen aller Bilder durch WebP Versionen`
-  - `HTML-Seiten durch dynamische PHP-Seiten ersetzt`
-  - `hinzufügen SQL Dump für lokales Arbeiten`
-- **Commit-Beschreibung (optional):** 1–4 kurze Stichpunkte auf Deutsch, die die
-  wichtigsten Änderungen auflisten.
-- **Pull-Request-Titel:** kurzer deutscher Satz wie beim Commit-Titel.
-- **Pull-Request-Beschreibung:** kurzer Einleitungssatz, dann eine
-  Stichpunktliste der Änderungen auf Deutsch.
-- **Code-Kommentare:** auf Deutsch, einfach und erklärend (siehe Schreibregeln) –
-  jeden PHP-Datenbankblock kurz kommentieren.
-
-## Nach jeder Änderung
-
-Wenn eine Datei fertig ist: in **2 Sätzen auf Deutsch** erklären, was sie macht –
-als Vorbereitung für die mündliche Prüfung.
+Neue statische Bilder als **WebP**, max. **1920px** breit, in `images/`. Produkt-/Erlebnisbilder kommen als BLOB in die DB (nicht als Datei verlinken).

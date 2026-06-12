@@ -2,7 +2,8 @@
 // Zentrale Datenbankverbindung einbinden
 require 'db_connect.php';
 
-// Produkt-Nummer aus der Adresse holen und in eine Zahl umwandeln
+// Produkt-Nummer aus der Adresse holen und in eine Zahl umwandeln.
+// "?? 0" heisst: fehlt die Nummer in der Adresse, wird 0 genommen.
 $id = intval($_GET['id'] ?? 0);
 
 // Datenbankabfrage: alle Infos zum Produkt aus der View "produkt_details" laden.
