@@ -829,6 +829,13 @@ header {
   color: var(--rot);
 }
 
+/* Buchen-Button immer ganz unten in der Karte.
+   Die Karte ist ein Flex-Container (Spalte); margin-top: auto schiebt den
+   Button nach unten, sodass er bei allen Karten auf gleicher Höhe sitzt. */
+.event-card .btn-outline {
+  margin-top: auto;
+}
+
 /* ===== SPLIT-BLOCK (Bild + Text, abwechselnd) ===== */
 .split {
   display: grid;

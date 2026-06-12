@@ -6,7 +6,8 @@ require 'db_connect.php';
 $stmt = $pdo->query("SELECT kategorie_id, name FROM kategorien ORDER BY kategorie_id");
 $kategorien = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Gewählte Kategorie aus der Adresse lesen (0 = alle Kategorien anzeigen)
+// Gewählte Kategorie aus der Adresse lesen (0 = alle Kategorien anzeigen).
+// "?? 0" heisst: steht keine Kategorie in der Adresse, wird 0 genommen.
 $aktuelleKategorie = intval($_GET['kategorie'] ?? 0);
 
 // Wie viele Produkte pro Kategorie in der Übersicht ("Alle") gezeigt werden

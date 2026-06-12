@@ -78,8 +78,17 @@
         <div class="footer-newsletter">
           <h4>Newsletter</h4>
           <p>Neue Blends, Rezepte und Geschichten direkt in dein Postfach.</p>
-          <form id="newsletterForm" class="newsletter-form" action="#" novalidate>
-            <input type="email" id="newsletterEmail" placeholder="Deine E-Mail" />
+          <?php
+          // Rückmeldung nach dem Absenden des Newsletter-Formulars anzeigen
+          if (isset($_GET['newsletter']) && $_GET['newsletter'] === 'ok') {
+              echo '<div class="success-msg">Danke fürs Abonnieren!</div>';
+          }
+          if (isset($_GET['newsletter']) && $_GET['newsletter'] === 'fehler') {
+              echo '<div class="error-msg">Bitte gib eine gültige E-Mail ein.</div>';
+          }
+          ?>
+          <form id="newsletterForm" class="newsletter-form" action="submit_newsletter.php" method="post" novalidate>
+            <input type="email" id="newsletterEmail" name="email" placeholder="Deine E-Mail" />
             <button type="submit" class="btn">Abonnieren</button>
           </form>
           <div class="newsletter-feedback" id="newsletterFeedback"></div>

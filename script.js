@@ -119,14 +119,13 @@ document.addEventListener("DOMContentLoaded", function () {
   canvas.width = size;
   canvas.height = size;
 
-  // Die sechs Felder des Rads (Beschriftung, Hintergrund- und Textfarbe)
+  // Die fünf Felder des Rads (Beschriftung, Hintergrund- und Textfarbe)
   // Farben passend zum Design: Cayenne-Rot, Schwarz, Hellgrau im Wechsel
   var segments = [
     { label: "Gratis Gewürz", color: "#d72638", text: "#ffffff" },
     { label: "10% Rabatt", color: "#111111", text: "#ffffff" },
     { label: "5% Rabatt", color: "#e8e8e8", text: "#111111" },
     { label: "Gratis Versand", color: "#d72638", text: "#ffffff" },
-    { label: "Nichts getroffen", color: "#111111", text: "#ffffff" },
     { label: "15% Rabatt", color: "#e8e8e8", text: "#111111" },
   ];
   var segCount = segments.length;
@@ -373,8 +372,6 @@ document.addEventListener("DOMContentLoaded", function () {
     return;
   }
   form.addEventListener("submit", function (e) {
-    // Kein echter Versand: Seite nicht neu laden, nur Dankesmeldung zeigen
-    e.preventDefault();
     var feld = document.getElementById("newsletterEmail");
     var feedback = document.getElementById("newsletterFeedback");
     var wert = "";
@@ -383,13 +380,12 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     // Einfache Prüfung: Eingabe vorhanden und sieht nach E-Mail aus
     if (wert.length < 3 || wert.indexOf("@") === -1) {
+      // Ungültig: Formular NICHT abschicken, nur Hinweis zeigen
+      e.preventDefault();
       feedback.innerText = "Bitte gib eine gültige E-Mail ein.";
       return;
     }
-    feedback.innerText = "Danke fürs Abonnieren!";
-    if (feld) {
-      feld.value = "";
-    }
+    // Gültig: Formular wird normal an submit_newsletter.php geschickt (speichert in der DB)
   });
 });
 
