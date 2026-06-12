@@ -1254,6 +1254,16 @@ footer {
 .footer-links a:hover {
   color: var(--rot);
 }
+/* Zeile mit den Namen der Gruppenmitglieder */
+.footer-team {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem 1.2rem;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--grau-text);
+}
+
 .disclaimer {
   display: flex;
   align-items: center;
